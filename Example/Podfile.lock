@@ -1,0 +1,22 @@
+PODS:
+  - LinEqua (0.1.0)
+  - Nimble (5.1.1)
+  - Quick (1.0.0)
+
+DEPENDENCIES:
+  - LinEqua (from `../`)
+  - Nimble (~> 5.1.1)
+  - Quick (~> 1.0.0)
+
+EXTERNAL SOURCES:
+  LinEqua:
+    :path: ../
+
+SPEC CHECKSUMS:
+  LinEqua: 5d6c423dbc040f231c765aa0ed2cb4f2519545b5
+  Nimble: 415e3aa3267e7bc2c96b05fa814ddea7bb686a29
+  Quick: 8024e4a47e6cc03a9d5245ef0948264fc6d27cff
+
+PODFILE CHECKSUM: e21a2c30b9b47ea03c34bcc00e10de8797800b1a
+
+COCOAPODS: 1.2.1
