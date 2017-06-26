@@ -35,6 +35,10 @@ class ViewController: UIViewController {
             print("aa==bb")
         }
         
+        
+        let matr: Matrix = Matrix(withZeroMatrixOfWidth: 3, height: 4)
+        print("\(matr)")
+        
     }
 
     override func didReceiveMemoryWarning() {
