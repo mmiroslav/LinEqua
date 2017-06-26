@@ -13,7 +13,7 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  LinEqua: 5d6c423dbc040f231c765aa0ed2cb4f2519545b5
+  LinEqua: 4e32aa1f5542bb02164f360e5761cd957676e5af
   Nimble: 415e3aa3267e7bc2c96b05fa814ddea7bb686a29
   Quick: 8024e4a47e6cc03a9d5245ef0948264fc6d27cff
 
