@@ -2,7 +2,7 @@
 //  Vector.swift
 //  Pods
 //
-//  Created by Miroslav Milivojevic on 6/26/17.
+//  Created by Miroslav Milivojevic
 //
 //
 
@@ -10,21 +10,30 @@ import UIKit
 
 public class Vector: NSObject {
 
-    var vector = [Double]()
+    private var elements = [Double]()
     
+    public var elementsArray: [Double] {
+        return self.elements
+    }
+    
+    public var count: Int {
+        return elements.count
+    }
+
+    override public var description: String {
+        return elements.description
+    }
+    
+    // MARK: inits
     
     public convenience init(withArray array: Array<Double>) {
         self.init()
-        vector = array
+        self.elements = array
     }
-
-    public func printVector() -> String{
-        var str = "["
-        for elem in vector {
-            str.append("\(elem),")
-        }
-        str.append("]")
-        return str
+    
+    public convenience init(zeroVectorWith dimension: Int) {
+        self.init()
+        self.elements = [Double](repeating: 0.0, count: dimension)
     }
 }
 
@@ -32,12 +41,29 @@ public class Vector: NSObject {
 extension Vector {
     
     static public func *(lhs: Vector, rhs: Double) -> Vector {
-        let newVectorArray = lhs.vector.map { $0 * rhs }
+        let newVectorArray = lhs.elementsArray.map { $0 * rhs }
+        return Vector(withArray: newVectorArray)
+    }
+    
+    static public func +(lhs: Vector, rhs: Vector) -> Vector {
+        var newVectorArray = [Double](repeating: 0.0, count: lhs.count)
+        for i in 0..<lhs.count {
+            newVectorArray[i] = lhs.elementsArray[i] + rhs.elementsArray[i]
+        }
         return Vector(withArray: newVectorArray)
     }
     
     static public func ==(lhs: Vector, rhs: Vector) -> Bool {
-        return lhs.vector == rhs.vector
+        if lhs.count != rhs.count {
+            return false
+        }
+        
+        for i in 0..<lhs.count {
+            if lhs.elementsArray[i] != rhs.elementsArray[i] {
+                return false
+            }
+        }
+        return true
     }
     
     static public func !=(lhs: Vector, rhs: Vector) -> Bool {
