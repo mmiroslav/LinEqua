@@ -19,13 +19,21 @@ class ViewController: UIViewController {
         let a: Vector = Vector()
         let b: Vector = Vector(withArray: [1,1,2,3,5,8])
         
-        print(b.printVector())
+        print(b)
         let c = b * 3.0
-        print(c.printVector())
+        print(c)
         if a == b {
             print("a == b")
         }
         
+        
+        let aa = Vector(withArray: [1,2,1])
+        let bb = Vector(withArray: [1,2,1])
+        
+        
+        if aa == bb {
+            print("aa==bb")
+        }
         
     }
 
