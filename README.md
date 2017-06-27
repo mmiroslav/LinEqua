@@ -22,7 +22,7 @@ pod "LinEqua"
 
 ## Author
 
-Miroslav Milivojevic, badger.mm@gmail.com
+Miroslav Milivojevic, miroslav.p.milivojevic@gmail.com
 
 ## License
 
