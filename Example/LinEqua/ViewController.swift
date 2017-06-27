@@ -36,9 +36,26 @@ class ViewController: UIViewController {
         }
         
         
-        let matr: Matrix = Matrix(withZeroMatrixOfWidth: 3, height: 4)
+//        let matr: Matrix = Matrix(withZeroMatrixOfWidth: 3, height: 4)
+        let size = Size(x: 3, y: 4)
+        let matr = Matrix(withSize: size)
         print("\(matr)")
         
+        _ = matr.transpose()
+        
+        print("\(matr)")
+        
+        let mtxSample = [
+            [0.0,1.0,2.0,3.0],
+            [4.0,5.0,6.0,7.0],
+            [8.0,9.0,10.0,11.0]
+        ]
+        
+        let newmtx = Matrix(withElements: mtxSample)
+        print(newmtx)
+        _ = newmtx.transpose()
+        print(newmtx)
+
     }
 
     override func didReceiveMemoryWarning() {

@@ -10,29 +10,45 @@ import UIKit
 
 public class Matrix: NSObject {
     
-    private var x: Int = 0
-    private var y: Int = 0
+    public var size = Size(x: 0, y: 0)
+    public var elements: [[Double]] = []
     
-    private var rows: [Vector] = [Vector]()
+    // MARK: inits
+    
+    private override init() {}
+    
+    public convenience init(withSize size: Size) {
+        self.init()
+        self.size = size
+        elements = [[Double]].init(repeating: [Double].init(repeating: 0.0, count: size.y), count: size.x)
+    }
+    
+    public convenience init(withElements elements: [[Double]]) {
+        self.init()
+        if elements.count <= 0 {
+            fatalError("Matrix with size [0][0] not allowed")
+        }
+        self.size = Size(x: elements.count, y: elements[0].count)
+        self.elements = elements
+    }
+    
+    // MARK: override vars
     
     override public var description: String {
-        return rows.reduce("") { $0 + "\($1)\n" }
+        return elements.reduce("") { $0 + "\($1)\n" }
     }
     
+    //MARK: functionalities
     
-    public init(withRows vectors: [Vector]) {
-        rows = vectors
-        if vectors.count > 0 {
-            x = vectors.count
-            y = vectors[0].count
+    public func transpose() -> Matrix {
+        let transponed = Matrix(withSize: Size(x: size.y, y: size.x))
+        for i in 0..<size.y {
+            for j in 0..<size.x {
+                transponed.elements[i][j] = self.elements[j][i]
+            }
         }
+        self.elements = transponed.elements
+        return self
     }
-    
-    
-    public convenience init(withZeroMatrixOfWidth width: Int, height: Int) {
-        let vector = Vector(zeroVectorWith: width)
-        self.init(withRows: [Vector](repeating: vector, count: height))
-    }
-    
     
 }
