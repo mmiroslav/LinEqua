@@ -38,7 +38,7 @@ class ViewController: UIViewController {
         
 //        let matr: Matrix = Matrix(withZeroMatrixOfWidth: 3, height: 4)
         let size = Size(x: 3, y: 4)
-        let matr = Matrix(withSize: size)
+        var matr = Matrix(withSize: size)
         print("\(matr)")
         
         _ = matr.transpose()
@@ -51,7 +51,9 @@ class ViewController: UIViewController {
             [8.0,9.0,10.0,11.0]
         ]
         
-        let newmtx = Matrix(withElements: mtxSample)
+        var newmtx = Matrix(withElements: mtxSample)
+        
+        _ = newmtx
         print(newmtx)
 //        _ = newmtx.transpose()
         newmtx.removeRow(at: 1)
@@ -59,7 +61,20 @@ class ViewController: UIViewController {
         newmtx.removeCollumn(at: 2)
         print(newmtx)
         
+//        print(detMatrix.determinant(detMatrix))
+        
 
+        let squareMAtrixSample = [
+            [1.0,3.0,4.0],
+            [0.0,4.0,1.0],
+            [5.0,6.0,3.0]
+        ]
+        
+        print(squareMAtrixSample)
+        let sqMatrix = Matrix(withElements: squareMAtrixSample)
+        let det = sqMatrix.determinant(sqMatrix)
+         print(det)
+        
     }
 
     override func didReceiveMemoryWarning() {

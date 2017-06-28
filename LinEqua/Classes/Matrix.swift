@@ -8,7 +8,7 @@
 
 import UIKit
 
-public class Matrix: NSObject {
+public struct Matrix {
     
     public var size = Size(x: 0, y: 0)
     public var elements: [[Double]] = []
@@ -19,16 +19,13 @@ public class Matrix: NSObject {
     
     // MARK: inits
     
-    private override init() {}
     
-    public convenience init(withSize size: Size) {
-        self.init()
+    public init(withSize size: Size) {
         self.size = size
         elements = [[Double]].init(repeating: [Double].init(repeating: 0.0, count: size.y), count: size.x)
     }
     
-    public convenience init(withElements elements: [[Double]]) {
-        self.init()
+    public init(withElements elements: [[Double]]) {
         if elements.count <= 0 {
             fatalError("Matrix with size [0][0] not allowed")
         }
@@ -38,14 +35,14 @@ public class Matrix: NSObject {
     
     // MARK: override vars
     
-    override public var description: String {
+    public var description: String {
         return elements.reduce("") { $0 + "\($1)\n" }
     }
     
     //MARK: functionalities
     
-    public func transpose() -> Matrix {
-        let transponed = Matrix(withSize: Size(x: size.y, y: size.x))
+    public mutating func transpose() -> Matrix {
+        var transponed = Matrix(withSize: Size(x: size.y, y: size.x))
         for i in 0..<size.y {
             for j in 0..<size.x {
                 transponed.elements[i][j] = self.elements[j][i]
@@ -55,21 +52,44 @@ public class Matrix: NSObject {
         return self
     }
     
-    public func determininant() -> Double {
-        
-        
-        return 0.0
+    
+    
+    public func determinant(_ matrix: Matrix) -> Double {
+        if matrix.elements.first?.count == 1 {
+            print("single matrix \(matrix)")
+            return (matrix.elements.first?.first)!
+        } else {
+            
+            var det = 0.0
+            var sign = 1.0
+            
+            guard let firstRow = matrix.elements.first else { return 0.0 }
+            
+            for (column, value) in firstRow.enumerated() {
+                var subMatrix = matrix
+                print(subMatrix)
+                subMatrix.removeRow(at: 0)
+                subMatrix.removeCollumn(at: column)
+                print(subMatrix)
+                det += value * sign * determinant(subMatrix)
+                print("det: \(det)")
+                sign *= -1.0
+            }
+            
+            return det
+        }
     }
     
     
-    public func removeRow(at index: Int) {
+    public mutating func removeRow(at index: Int) {
         if index >= elements.count {
             fatalError("Unexpected index")
         }
         elements.remove(at: index)
+        size = Size(x: size.x - 1, y: size.y)
     }
     
-    public func removeCollumn(at index: Int) {
+    public mutating func removeCollumn(at index: Int) {
         if let count = elements.first?.count, index >= count {
             fatalError("Unexpected index")
         }
@@ -79,6 +99,7 @@ public class Matrix: NSObject {
             newMatrix.append(elem)
         }
         elements = newMatrix
+        size = Size(x: size.x, y: size.y - 1)
     }
     
 }
