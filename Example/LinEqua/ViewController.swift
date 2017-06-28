@@ -65,15 +65,20 @@ class ViewController: UIViewController {
         
 
         let squareMAtrixSample = [
-            [1.0,3.0,4.0],
-            [0.0,4.0,1.0],
-            [5.0,6.0,3.0]
+            [8.0,2.0,3.0,4.0],
+            [5.0,6.0,7.0,8.0],
+            [11.0,18.0,11.0,12.0],
+            [13.0,7.0,15.0,16.0]
         ]
         
-        print(squareMAtrixSample)
-        let sqMatrix = Matrix(withElements: squareMAtrixSample)
+        
+        var sqMatrix = Matrix(withElements: squareMAtrixSample)
+        print(sqMatrix)
         let det = sqMatrix.determinant(sqMatrix)
-         print(det)
+        print(det)
+        
+        sqMatrix.upperTriangle()
+        print(sqMatrix.description)
         
     }
 

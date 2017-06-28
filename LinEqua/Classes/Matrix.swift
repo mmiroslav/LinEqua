@@ -56,28 +56,62 @@ public struct Matrix {
     
     public func determinant(_ matrix: Matrix) -> Double {
         if matrix.elements.first?.count == 1 {
-            print("single matrix \(matrix)")
             return (matrix.elements.first?.first)!
         } else {
-            
             var det = 0.0
             var sign = 1.0
             
             guard let firstRow = matrix.elements.first else { return 0.0 }
-            
             for (column, value) in firstRow.enumerated() {
                 var subMatrix = matrix
-                print(subMatrix)
                 subMatrix.removeRow(at: 0)
                 subMatrix.removeCollumn(at: column)
-                print(subMatrix)
                 det += value * sign * determinant(subMatrix)
-                print("det: \(det)")
                 sign *= -1.0
             }
-            
             return det
         }
+    }
+    
+    
+    public mutating func upperTriangle() {
+        var newMatrix = self
+        guard let matrixWidth = newMatrix.elements.first?.count else { return }
+        let matrixHeight = newMatrix.elements.count
+        
+//        var newRow = [Double](repeating: 0, count: matrixWidth)
+        
+//        for i in 0..<matrixHeight {
+//            for j in i+1..<matrixWidth {
+//                for k in 0..<matrixWidth {
+//                    let v1 = newMatrix.elements[i][k] //r0
+//                    let v2 = newMatrix.elements[j][i] //r1[0]
+//                    let v3 = newMatrix.elements[j][k] //r1
+//                    newRow[k] = v1 * (-v2 / v1) + v3
+//                }
+//                newMatrix.elements[j] = newRow
+//            }
+//        }
+        
+        for p in 0..<(matrixHeight) {
+            for i in p..<(matrixHeight) {
+                for j in i+1..<matrixHeight {
+                    let newRowI = mulArray(newMatrix.elements[i], with: -newMatrix.elements[j][i] / newMatrix.elements[i][i] )
+                    var newRowJ = [Double](repeating: 0, count: matrixWidth)
+                    for (index,v) in newMatrix.elements[j].enumerated() {
+                        newRowJ[index] = v + newRowI[index]
+                    }
+                    newMatrix.elements[j] = newRowJ
+                    print(newMatrix.description)
+                }
+            }
+        }
+        
+        elements = newMatrix.elements
+    }
+    
+    func mulArray(_ array: [Double], with x: Double) -> [Double] {
+        return array.map { $0 * x }
     }
     
     
