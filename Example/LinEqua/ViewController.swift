@@ -53,8 +53,12 @@ class ViewController: UIViewController {
         
         let newmtx = Matrix(withElements: mtxSample)
         print(newmtx)
-        _ = newmtx.transpose()
+//        _ = newmtx.transpose()
+        newmtx.removeRow(at: 1)
         print(newmtx)
+        newmtx.removeCollumn(at: 2)
+        print(newmtx)
+        
 
     }
 

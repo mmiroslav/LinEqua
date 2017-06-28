@@ -13,6 +13,10 @@ public class Matrix: NSObject {
     public var size = Size(x: 0, y: 0)
     public var elements: [[Double]] = []
     
+    public var isSquare: Bool {
+        return size.x == size.y
+    }
+    
     // MARK: inits
     
     private override init() {}
@@ -49,6 +53,32 @@ public class Matrix: NSObject {
         }
         self.elements = transponed.elements
         return self
+    }
+    
+    public func determininant() -> Double {
+        
+        
+        return 0.0
+    }
+    
+    
+    public func removeRow(at index: Int) {
+        if index >= elements.count {
+            fatalError("Unexpected index")
+        }
+        elements.remove(at: index)
+    }
+    
+    public func removeCollumn(at index: Int) {
+        if let count = elements.first?.count, index >= count {
+            fatalError("Unexpected index")
+        }
+        var newMatrix = [[Double]]()
+        for var elem in elements {
+            elem.remove(at: index)
+            newMatrix.append(elem)
+        }
+        elements = newMatrix
     }
     
 }
