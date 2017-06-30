@@ -72,14 +72,23 @@ class ViewController: UIViewController {
         ]
         
         
+        
+        
         var sqMatrix = Matrix(withElements: squareMAtrixSample)
         print(sqMatrix)
         let det = sqMatrix.determinant(sqMatrix)
         print(det)
         
-        sqMatrix.upperTriangle()
-        print(sqMatrix.description)
+        let gaus = sqMatrix.gaussian(matrix: sqMatrix)
+        print(gaus)
         
+        
+//        sqMatrix.upperTriangle()
+//        print(sqMatrix.description)
+//        
+//        print(Matrix.determinantForTriangleMatrix(sqMatrix))
+//        print(sqMatrix.determinant(sqMatrix))
+//
     }
 
     override func didReceiveMemoryWarning() {

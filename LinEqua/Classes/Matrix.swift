@@ -54,44 +54,10 @@ public struct Matrix {
     
     
     
-    public func determinant(_ matrix: Matrix) -> Double {
-        if matrix.elements.first?.count == 1 {
-            return (matrix.elements.first?.first)!
-        } else {
-            var det = 0.0
-            var sign = 1.0
-            
-            guard let firstRow = matrix.elements.first else { return 0.0 }
-            for (column, value) in firstRow.enumerated() {
-                var subMatrix = matrix
-                subMatrix.removeRow(at: 0)
-                subMatrix.removeCollumn(at: column)
-                det += value * sign * determinant(subMatrix)
-                sign *= -1.0
-            }
-            return det
-        }
-    }
-    
-    
     public mutating func upperTriangle() {
         var newMatrix = self
         guard let matrixWidth = newMatrix.elements.first?.count else { return }
         let matrixHeight = newMatrix.elements.count
-        
-//        var newRow = [Double](repeating: 0, count: matrixWidth)
-        
-//        for i in 0..<matrixHeight {
-//            for j in i+1..<matrixWidth {
-//                for k in 0..<matrixWidth {
-//                    let v1 = newMatrix.elements[i][k] //r0
-//                    let v2 = newMatrix.elements[j][i] //r1[0]
-//                    let v3 = newMatrix.elements[j][k] //r1
-//                    newRow[k] = v1 * (-v2 / v1) + v3
-//                }
-//                newMatrix.elements[j] = newRow
-//            }
-//        }
         
         for p in 0..<(matrixHeight) {
             for i in p..<(matrixHeight) {
@@ -112,6 +78,40 @@ public struct Matrix {
     
     func mulArray(_ array: [Double], with x: Double) -> [Double] {
         return array.map { $0 * x }
+    }
+    
+    
+    // MARK: determinant
+    
+    /**
+     *  Recursive aproach
+     */
+    public func determinant(_ matrix: Matrix) -> Double {
+        if matrix.elements.first?.count == 1 {
+            return (matrix.elements.first?.first)!
+        } else {
+            var det = 0.0
+            var sign = 1.0
+            
+            guard let firstRow = matrix.elements.first else { return 0.0 }
+            for (column, value) in firstRow.enumerated() {
+                var subMatrix = matrix
+                subMatrix.removeRow(at: 0)
+                subMatrix.removeCollumn(at: column)
+                det += value * sign * determinant(subMatrix)
+                sign *= -1.0
+            }
+            return det
+        }
+    }
+    
+    public static func determinantForTriangleMatrix(_ matrix: Matrix) -> Double {
+        guard let firstElem = matrix.elements.first?.first else { return 0.0 }
+        var det = firstElem
+        for i in 1..<matrix.elements.count {
+            det *= matrix.elements[i][i]
+        }
+        return det
     }
     
     
@@ -136,4 +136,42 @@ public struct Matrix {
         size = Size(x: size.x, y: size.y - 1)
     }
     
+    
+    public func gaussian(matrix mtx: Matrix) -> Matrix {
+        var matrix = mtx
+        
+        var id = Matrix(withSize: self.size)
+        var rowExchange = 0
+        
+        for j in 0..<(matrix.elements.first?.count)! * 2 {
+            for i in j - rowExchange..<matrix.elements.count {
+                let pivot = matrix.elements[j - rowExchange][j - rowExchange]
+                if pivot == 0 {
+                    let holdingMat = matrix.elements[i]
+                    matrix.elements[i] = matrix.elements[i + 1]
+                    matrix.elements[i + 1] = holdingMat
+                    
+                    let holdingID = id.elements[i]
+                    id.elements[i] = id.elements[i + 1]
+                    id.elements[i + 1] = holdingID
+                    rowExchange += 1
+                    break
+                }
+                var factor = matrix.elements[i + 1][j - rowExchange] / pivot
+                
+                for k in 0..<(matrix.elements.first?.count)! {
+                    matrix.elements[i + 1][k] -= factor * matrix.elements[j - rowExchange][k]
+                    id.elements[i + 1][k] -= factor * id.elements[j - rowExchange][k]
+                }
+                if i + 1 >= matrix.elements.count - 1 {
+                    break
+                }
+            }
+            if j - rowExchange + 1 >= (matrix.elements.first?.count)! - 1 {
+                break
+            }
+        }
+        return id        
+    }
+
 }
