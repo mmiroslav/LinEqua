@@ -82,12 +82,28 @@ class ViewController: UIViewController {
         var newGausElemMAtrix = Matrix(withElements: squareMAtrixSample)
         
         print(newGausElemMAtrix.description)
-        newGausElemMAtrix.gaussianUpperTriangle()
-        print(newGausElemMAtrix.description)
         
-        print(newGausElemMAtrix.substitute())
-        print(newGausElemMAtrix.gaussJordan(forGaussUpperMatrix: newGausElemMAtrix))
+//        var startTime = CFAbsoluteTimeGetCurrent()
+//    
+//        newGausElemMAtrix.gaussianUpperTriangle()
+//        print(newGausElemMAtrix.gaussJordan(forGaussUpperMatrix: newGausElemMAtrix))
+//        
+//        var timeElapsed = CFAbsoluteTimeGetCurrent() - startTime
+//        print("Time elapsed: \(timeElapsed) s.")
+//        
+//        print(newGausElemMAtrix.description)
         
+/////////////////////////////////// 0000000000000000000 ////////////////////////////////
+        let startTime = CFAbsoluteTimeGetCurrent()
+
+        var newGausJordanElemMatrix = Matrix(withElements: squareMAtrixSample)
+        newGausJordanElemMatrix.gaussianUpperTriangle()
+        print(newGausJordanElemMatrix.substitute())
+        
+        let timeElapsed = CFAbsoluteTimeGetCurrent() - startTime
+        print("Time elapsed: \(timeElapsed) s.")
+        
+/////////////////////////////////// 0000000000000000000 ////////////////////////////////
 //        var sum = 0.0
 //        for i in 0..<newGausElemMAtrix.elements.count {
 //            sum += newGausElemMAtrix.elements[i][newGausElemMAtrix.elements.count] * squareMAtrixSample[0][i]
