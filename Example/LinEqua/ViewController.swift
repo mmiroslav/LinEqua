@@ -65,10 +65,10 @@ class ViewController: UIViewController {
         
 
         let squareMAtrixSample = [
-            [8.0,2.0,3.0,4.0],
-            [5.0,6.0,7.0,8.0],
-            [11.0,18.0,11.0,12.0],
-            [13.0,7.0,15.0,16.0]
+            [8.0,  2.0,  3.0,  4.0,  13.0],
+            [5.0,  6.0,  7.0,  8.0,  23.0],
+            [11.0, 18.0, 11.0, 12.0, 45.0],
+            [13.0, 17.0,  15.0, 16.0, 78.0],
         ]
         
         
@@ -79,8 +79,25 @@ class ViewController: UIViewController {
         let det = sqMatrix.determinant(sqMatrix)
         print(det)
         
-        let gaus = sqMatrix.gaussian(matrix: sqMatrix)
-        print(gaus)
+        var newGausElemMAtrix = Matrix(withElements: squareMAtrixSample)
+        
+        print(newGausElemMAtrix.description)
+        newGausElemMAtrix.gaussianUpperTriangle()
+        print(newGausElemMAtrix.description)
+        
+        
+        var sum = 0.0
+        for i in 0..<newGausElemMAtrix.elements.count {
+            sum += newGausElemMAtrix.elements[i][newGausElemMAtrix.elements.count] * squareMAtrixSample[0][i]
+            print("\(sum) = \(newGausElemMAtrix.elements[i][newGausElemMAtrix.elements.count]) * \(squareMAtrixSample[0][i])")
+        }
+        
+        print(sum)
+        
+//        newGausElemMAtrix.gau
+        
+//        let gaus = sqMatrix.gaussian(matrix: sqMatrix)
+//        print(gaus)
         
         
 //        sqMatrix.upperTriangle()
