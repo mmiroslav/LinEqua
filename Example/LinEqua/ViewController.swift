@@ -85,14 +85,16 @@ class ViewController: UIViewController {
         newGausElemMAtrix.gaussianUpperTriangle()
         print(newGausElemMAtrix.description)
         
+        print(newGausElemMAtrix.substitute())
+        print(newGausElemMAtrix.gaussJordan(forGaussUpperMatrix: newGausElemMAtrix))
         
-        var sum = 0.0
-        for i in 0..<newGausElemMAtrix.elements.count {
-            sum += newGausElemMAtrix.elements[i][newGausElemMAtrix.elements.count] * squareMAtrixSample[0][i]
-            print("\(sum) = \(newGausElemMAtrix.elements[i][newGausElemMAtrix.elements.count]) * \(squareMAtrixSample[0][i])")
-        }
-        
-        print(sum)
+//        var sum = 0.0
+//        for i in 0..<newGausElemMAtrix.elements.count {
+//            sum += newGausElemMAtrix.elements[i][newGausElemMAtrix.elements.count] * squareMAtrixSample[0][i]
+//            print("\(sum) = \(newGausElemMAtrix.elements[i][newGausElemMAtrix.elements.count]) * \(squareMAtrixSample[0][i])")
+//        }
+//        
+//        print(sum)
         
 //        newGausElemMAtrix.gau
         

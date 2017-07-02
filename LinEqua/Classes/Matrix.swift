@@ -204,22 +204,19 @@ public struct Matrix {
         
         
         // diagonal only 
-        
-        for i in (1...lastRowIndex).reversed() {
-            for j in (0...i-1).reversed() {
-                var pivotRow: [Double] = matrix[i]
-                pivotRow = pivotRow.map { $0 * matrix[j][i] }
-                
-                for k in 0..<matrix[j].count {
-                    matrix[j][k] -= pivotRow[k]
-                }
-            }
-        }
-        
-        
-        
-        
-        
+//        
+//        for i in (1...lastRowIndex).reversed() {
+//            for j in (0...i-1).reversed() {
+//                var pivotRow: [Double] = matrix[i]
+//                pivotRow = pivotRow.map { $0 * matrix[j][i] }
+//                
+//                for k in 0..<matrix[j].count {
+//                    matrix[j][k] -= pivotRow[k]
+//                }
+//            }
+//        }
+//        
+//        
         self.elements = matrix
     }
     
@@ -236,6 +233,52 @@ public struct Matrix {
         return m
     }
 
+    
+    public func gaussJordan(forGaussUpperMatrix m: Matrix) -> [Double]{
+        var matrix = m.elements
+
+        // diagonal only
+        
+        for i in (1..<matrix.count).reversed() {
+            for j in (0..<i).reversed() {
+                var pivotRow: [Double] = matrix[i]
+                pivotRow = pivotRow.map { $0 * matrix[j][i] }
+                
+                for k in 0..<matrix[j].count {
+                    matrix[j][k] -= pivotRow[k]
+                }
+            }
+        }
+        
+        var sol = [Double](repeating: 0.0, count: matrix.count)
+        for i in 0..<matrix.count {
+            sol[i] = matrix[i].last!
+        }
+        
+        return sol
+    }
+    
+    public func substitute() -> [Double] {
+        var matrix = elements
+        var sol = [Double](repeating: 0.0, count: matrix.count)
+        sol[sol.count - 1] = matrix[matrix.count - 1][matrix.count]
+        
+        for i in (0..<matrix.count - 1).reversed() {
+            var vector: [Double] = matrix[i]
+            
+            var substract = 0.0
+            for k in 0..<sol.count {
+                substract += vector[k] * sol[k]
+            }
+            sol[i] = vector.last! - substract
+        }
+        
+        return sol
+    }
+    
+    
+    
+    
 }
 
 //extension Array where Element:Double {
