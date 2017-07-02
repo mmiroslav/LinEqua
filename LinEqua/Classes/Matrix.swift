@@ -52,35 +52,6 @@ public struct Matrix {
         return self
     }
     
-    
-    
-    public mutating func upperTriangle() {
-        var newMatrix = self
-        guard let matrixWidth = newMatrix.elements.first?.count else { return }
-        let matrixHeight = newMatrix.elements.count
-        
-        for p in 0..<(matrixHeight) {
-            for i in p..<(matrixHeight) {
-                for j in i+1..<matrixHeight {
-                    let newRowI = mulArray(newMatrix.elements[i], with: -newMatrix.elements[j][i] / newMatrix.elements[i][i] )
-                    var newRowJ = [Double](repeating: 0, count: matrixWidth)
-                    for (index,v) in newMatrix.elements[j].enumerated() {
-                        newRowJ[index] = v + newRowI[index]
-                    }
-                    newMatrix.elements[j] = newRowJ
-                    print(newMatrix.description)
-                }
-            }
-        }
-        
-        elements = newMatrix.elements
-    }
-    
-    func mulArray(_ array: [Double], with x: Double) -> [Double] {
-        return array.map { $0 * x }
-    }
-    
-    
     // MARK: determinant
     
     /**
@@ -137,47 +108,10 @@ public struct Matrix {
     }
     
     
-//    public func gaussian(matrix mtx: Matrix) -> Matrix {
-//        var matrix = mtx
-//        
-//        var id = Matrix(withSize: self.size)
-//        var rowExchange = 0
-//        
-//        for j in 0..<(matrix.elements.first?.count)! * 2 {
-//            for i in j - rowExchange..<matrix.elements.count {
-//                let pivot = matrix.elements[j - rowExchange][j - rowExchange]
-//                if pivot == 0 {
-//                    let holdingMat = matrix.elements[i]
-//                    matrix.elements[i] = matrix.elements[i + 1]
-//                    matrix.elements[i + 1] = holdingMat
-//                    
-//                    let holdingID = id.elements[i]
-//                    id.elements[i] = id.elements[i + 1]
-//                    id.elements[i + 1] = holdingID
-//                    rowExchange += 1
-//                    break
-//                }
-//                var factor = matrix.elements[i + 1][j - rowExchange] / pivot
-//                
-//                for k in 0..<(matrix.elements.first?.count)! {
-//                    matrix.elements[i + 1][k] -= factor * matrix.elements[j - rowExchange][k]
-//                    id.elements[i + 1][k] -= factor * id.elements[j - rowExchange][k]
-//                }
-//                if i + 1 >= matrix.elements.count - 1 {
-//                    break
-//                }
-//            }
-//            if j - rowExchange + 1 >= (matrix.elements.first?.count)! - 1 {
-//                break
-//            }
-//        }
-//        return id        
-//    }
+    // MARK: eleimination
     
-    
-    public mutating func gaussianUpperTriangle() {
-        let trashhold = 0.0000001
-        var matrix = self.elements
+    public static func gaussianUpperTriangle(forMatrix m: Matrix) -> Matrix {
+        var matrix = m.elements
         // TODO: swipe row if elem at [0,0] == 0
         
         // upper triangle
@@ -199,32 +133,18 @@ public struct Matrix {
             matrix[lastRowIndex] = matrix[lastRowIndex].map {$0 / matrix[lastRowIndex][lastRowIndex]}
         }
         
-        //clean
-        matrix = self.cleanMatrix(matrix, with: trashhold)
+        matrix = Matrix.cleanMatrix(matrix, with: Constant.Gaussian.threshold)
         
-        
-        // diagonal only 
-//        
-//        for i in (1...lastRowIndex).reversed() {
-//            for j in (0...i-1).reversed() {
-//                var pivotRow: [Double] = matrix[i]
-//                pivotRow = pivotRow.map { $0 * matrix[j][i] }
-//                
-//                for k in 0..<matrix[j].count {
-//                    matrix[j][k] -= pivotRow[k]
-//                }
-//            }
-//        }
-//        
-//        
-        self.elements = matrix
+        return Matrix(withElements: matrix)
     }
     
     
-    func cleanMatrix(_ matrix: [[Double]], with trashold: Double) -> [[Double]] {
+    static func cleanMatrix(_ matrix: [[Double]], with trashold: Double) -> [[Double]] {
         var m = matrix
+        guard let numberOfColumns = m.first?.count else { return [[Double]]() }
+   
         for i in 0..<m.count {
-            for j in 0..<m[0].count { // use m.first?.count and guard it
+            for j in 0..<numberOfColumns {
                 if abs(m[i][j]) < trashold {
                     m[i][j] = 0
                 }
@@ -234,8 +154,8 @@ public struct Matrix {
     }
 
     
-    public func gaussJordan(forGaussUpperMatrix m: Matrix) -> [Double]{
-        var matrix = m.elements
+    public func gaussJordan() -> [Double]{
+        var matrix = self.elements
 
         // diagonal only
         
@@ -275,16 +195,35 @@ public struct Matrix {
         
         return sol
     }
-    
-    
-    
-    
+
 }
 
-//extension Array where Element:Double {
-//    
-//    static func /(lhs: [Double], rhs: Double) -> [Double]{
-//        return lhs.map {$0 / rhs}
-//    }
-//    
-//}
+
+public extension Matrix {
+    
+    /**
+     * Solve system of linear equations using method of Gaussian eleimination
+     *
+     */
+    public func solveWithGaussian() -> [Double] {
+        
+        let matrix = Matrix.gaussianUpperTriangle(forMatrix: self)
+        let results = matrix.substitute()
+        
+        return results
+    }
+    
+    
+    /**
+     * Solve system of linear equations using method of Gauss-Jordan eleimination
+     *
+     */
+    public func solveWithGaussianJordan() -> [Double] {
+    
+        let matrix = Matrix.gaussianUpperTriangle(forMatrix: self)
+        let results = matrix.gaussJordan()
+        
+        return results
+    }
+}
+
