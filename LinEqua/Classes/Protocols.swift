@@ -7,3 +7,10 @@
 //
 
 import Foundation
+
+public protocol MatrixTimeMeasureProtocol {
+    
+    func timeOfExecutiongGaussian(duration time:CFAbsoluteTime, for matrix: Matrix)
+    func timeOfExecutiongGaussJordan(duration time:CFAbsoluteTime, for matrix: Matrix)
+    
+}

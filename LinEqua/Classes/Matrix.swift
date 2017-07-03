@@ -14,6 +14,8 @@ public struct Matrix: CustomStringConvertible {
     public var elements: [[Double]] = []
     public let originalValue: [[Double]]?
     
+    public var timeDelegate: MatrixTimeMeasureProtocol?
+    
     public var isSquare: Bool {
         return size.x == size.y
     }
@@ -228,9 +230,18 @@ public extension Matrix {
      *
      */
     public mutating func solveWithGaussian() -> [Double] {
+        let time = BlockTime()
         
+        if let originals = originalValue {
+            elements = originals
+        }
+        
+        time.startTime()
         self.gaussianUpperTriangle()
         let results = self.substitute()
+        let duration = time.stopTime()
+        
+        self.timeDelegate?.timeOfExecutiongGaussian(duration: duration, for: self)
         
         return results
     }
@@ -241,9 +252,18 @@ public extension Matrix {
      *
      */
     public mutating func solveWithGaussianJordan() -> [Double] {
-    
+        let time = BlockTime()
+        
+        if let originals = originalValue {
+            elements = originals
+        }
+        
+        time.startTime()
         self.gaussianUpperTriangle()
         let results = self.gaussJordan()
+        let duration = time.stopTime()
+        
+        self.timeDelegate?.timeOfExecutiongGaussJordan(duration: duration, for: self)
         
         return results
     }

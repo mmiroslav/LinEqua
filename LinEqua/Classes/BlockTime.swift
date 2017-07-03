@@ -7,7 +7,24 @@
 //
 
 import UIKit
+import CoreFoundation
 
-class BlockTime: NSObject {
-
+class BlockTime  {
+    var start: CFAbsoluteTime?
+    var stop: CFAbsoluteTime?
+    
+    var duration: CFAbsoluteTime {
+        guard let start = start, let stop = stop else { return 0.0 }
+        return stop - start
+    }
+    
+    public func startTime() {
+        start = CFAbsoluteTimeGetCurrent()
+    }
+    
+    public func stopTime() -> CFAbsoluteTime {
+        stop = CFAbsoluteTimeGetCurrent()
+        
+        return self.duration
+    }
 }

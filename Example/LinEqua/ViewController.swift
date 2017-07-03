@@ -19,9 +19,11 @@ class ViewController: UIViewController {
         let squareMatrixSample = Constant.SampleData.sampleMatrix5x6
     
         var matrixForGaussianElimination = Matrix(withElements: squareMatrixSample)
+        matrixForGaussianElimination.timeDelegate = self
         print(matrixForGaussianElimination.solveWithGaussian())
 
         var matrixForGaussJordanElimination = Matrix(withElements: squareMatrixSample)
+        matrixForGaussJordanElimination.timeDelegate = self
         print(matrixForGaussJordanElimination.solveWithGaussianJordan())
         
         print(matrixForGaussianElimination)
@@ -42,3 +44,12 @@ class ViewController: UIViewController {
 
 }
 
+extension ViewController: MatrixTimeMeasureProtocol {
+    func timeOfExecutiongGaussian(duration time: CFAbsoluteTime, for matrix: Matrix) {
+        print("Time for Gaussian: \(time)")
+    }
+    
+    func timeOfExecutiongGaussJordan(duration time: CFAbsoluteTime, for matrix: Matrix) {
+        print("Time for Gauss-Jordan: \(time)")
+    }
+}
