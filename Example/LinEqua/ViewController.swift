@@ -31,7 +31,7 @@ class ViewController: UIViewController {
         
 //        
 //        
-        let generator = Generator(withSize: Size(x: 200, y: 201))
+        let generator = Generator(withSize: Size(x: 50, y: 51))
         var generatedMatrix = generator.generateMatrix()
         generatedMatrix.timeDelegate = self
         print(generatedMatrix)
