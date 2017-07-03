@@ -16,25 +16,37 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
 //        let squareMatrixSample = Constant.SampleData.sampleMatrix4x5
-        let squareMatrixSample = Constant.SampleData.sampleMatrix5x6
-    
-        var matrixForGaussianElimination = Matrix(withElements: squareMatrixSample)
-        matrixForGaussianElimination.timeDelegate = self
-        print(matrixForGaussianElimination.solveWithGaussian())
+//        let squareMatrixSample = Constant.SampleData.sampleMatrix5x6
+//
+//        var matrixForGaussianElimination = Matrix(withElements: squareMatrixSample)
+//        matrixForGaussianElimination.timeDelegate = self
+//        print("determinant: \(matrixForGaussianElimination.determinantRecursive(matrixForGaussianElimination))")
+//        print(matrixForGaussianElimination.solveWithGaussian())
+//
+//        var matrixForGaussJordanElimination = Matrix(withElements: squareMatrixSample)
+//        matrixForGaussJordanElimination.timeDelegate = self
+//        print(matrixForGaussJordanElimination.solveWithGaussianJordan())
+//        
+//        print(matrixForGaussianElimination)
+        
+//        
+//        
+        let generator = Generator(withSize: Size(x: 200, y: 201))
+        var generatedMatrix = generator.generateMatrix()
+        generatedMatrix.timeDelegate = self
+        print(generatedMatrix)
+//        print(generatedMatrix.determinant())
+        
+        var genMatrixForGJ = generatedMatrix
+        var genMatrixForGOnly = generatedMatrix
 
-        var matrixForGaussJordanElimination = Matrix(withElements: squareMatrixSample)
-        matrixForGaussJordanElimination.timeDelegate = self
-        print(matrixForGaussJordanElimination.solveWithGaussianJordan())
+        _ = genMatrixForGOnly.solveWithGaussian()
+        _ = genMatrixForGJ.solveWithGaussianJordan()
         
-        print(matrixForGaussianElimination)
+//        print("Gaussian: \(genMatrixForGOnly.solveWithGaussian())")
+//        print("GaussJor: \(genMatrixForGJ.solveWithGaussianJordan())")
         
-        
-        //////////////////////////////////////////////////////////////////
-        //        let startTime = CFAbsoluteTimeGetCurrent()
-        //
-        //        let timeElapsed = CFAbsoluteTimeGetCurrent() - startTime
-        //        print("Time elapsed: \(timeElapsed) s.")
-        //////////////////////////////////////////////////////////////////
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -51,5 +63,9 @@ extension ViewController: MatrixTimeMeasureProtocol {
     
     func timeOfExecutiongGaussJordan(duration time: CFAbsoluteTime, for matrix: Matrix) {
         print("Time for Gauss-Jordan: \(time)")
+    }
+    
+    func timeOfDeterminantCalculation(duration time: CFAbsoluteTime, for matrix: Matrix) {
+        print("Time for Determinant calculation: \(time)")
     }
 }

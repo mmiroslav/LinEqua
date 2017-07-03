@@ -12,7 +12,7 @@ public struct Matrix: CustomStringConvertible {
     
     public var size = Size(x: 0, y: 0)
     public var elements: [[Double]] = []
-    public let originalValue: [[Double]]?
+    public var originalValue: [[Double]]?
     
     public var timeDelegate: MatrixTimeMeasureProtocol?
     
@@ -38,6 +38,10 @@ public struct Matrix: CustomStringConvertible {
         self.originalValue = self.elements
     }
     
+    public mutating func updateOriginals() {
+        self.originalValue = self.elements
+    }
+    
     // MARK: override vars
     
     public var description: String {
@@ -60,10 +64,31 @@ public struct Matrix: CustomStringConvertible {
     
     // MARK: determinant
     
+    public func determinant() -> Double {
+        let time = BlockTime()
+        time.startTime()
+        
+        var det = 0.0
+        if elements.count + 1 == elements[0].count {
+            var squareMatrix = self
+            squareMatrix.removeCollumn(at: squareMatrix.elements[0].count - 1)
+            det = determinantRecursive(squareMatrix)
+        } else {
+            det = determinantRecursive(self)
+        }
+        
+        let duration = time.stopTime()
+        print("Duration\(duration)")
+        self.timeDelegate?.timeOfDeterminantCalculation(duration: duration, for: self)
+        
+        return det
+    }
+    
     /**
      *  Recursive aproach
      */
-    public func determinant(_ matrix: Matrix) -> Double {
+    public func determinantRecursive(_ matrix: Matrix) -> Double {
+        
         if matrix.elements.first?.count == 1 {
             return (matrix.elements.first?.first)!
         } else {
@@ -75,8 +100,14 @@ public struct Matrix: CustomStringConvertible {
                 var subMatrix = matrix
                 subMatrix.removeRow(at: 0)
                 subMatrix.removeCollumn(at: column)
-                det += value * sign * determinant(subMatrix)
+//                print(subMatrix)
+//                print("Value: \(value)")
+                let prev = determinantRecursive(subMatrix)
+                det += value * sign * prev
                 sign *= -1.0
+//                print(value)
+//                print(det)
+                
             }
             return det
         }
@@ -139,13 +170,17 @@ public struct Matrix: CustomStringConvertible {
         var matrix = self.elements
         
         // upper triangle
+        var pivotRow: [Double] = [Double]()
+        var pivot: Double = 0.0
+        var mul: Double = 0.0
         for i in 0..<matrix.count-1 {
-            let pivot = matrix[i][i]
+            pivot = matrix[i][i]
             matrix[i] = matrix[i].map { $0 / pivot }
             for j in i+1..<matrix.count {
-                var pivotRow: [Double] = matrix[i]
+                pivotRow = matrix[i]
                 
-                pivotRow = pivotRow.map { $0 * matrix[j][i] }
+                mul = matrix[j][i]
+                pivotRow = pivotRow.map { $0 * mul }
                 
                 for k in 0..<matrix[j].count {
                     matrix[j][k] -= pivotRow[k]
@@ -182,11 +217,13 @@ public struct Matrix: CustomStringConvertible {
         var matrix = self.elements
 
         // diagonal only
-        
+        var pivotRow: [Double] = [Double]()
+        var mul: Double = 0.0
         for i in (1..<matrix.count).reversed() {
             for j in (0..<i).reversed() {
-                var pivotRow: [Double] = matrix[i]
-                pivotRow = pivotRow.map { $0 * matrix[j][i] }
+                pivotRow = matrix[i]
+                mul = matrix[j][i]
+                pivotRow = pivotRow.map { $0 * mul }
                 
                 for k in 0..<matrix[j].count {
                     matrix[j][k] -= pivotRow[k]
@@ -237,10 +274,11 @@ public extension Matrix {
         }
         
         time.startTime()
+        
         self.gaussianUpperTriangle()
         let results = self.substitute()
-        let duration = time.stopTime()
         
+        let duration = time.stopTime()
         self.timeDelegate?.timeOfExecutiongGaussian(duration: duration, for: self)
         
         return results
@@ -259,10 +297,11 @@ public extension Matrix {
         }
         
         time.startTime()
+        
         self.gaussianUpperTriangle()
         let results = self.gaussJordan()
-        let duration = time.stopTime()
         
+        let duration = time.stopTime()
         self.timeDelegate?.timeOfExecutiongGaussJordan(duration: duration, for: self)
         
         return results

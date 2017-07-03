@@ -14,8 +14,8 @@ class BlockTime  {
     var stop: CFAbsoluteTime?
     
     var duration: CFAbsoluteTime {
-        guard let start = start, let stop = stop else { return 0.0 }
-        return stop - start
+        guard let begin = start, let end = stop else { return 0.0 }
+        return end - begin
     }
     
     public func startTime() {
