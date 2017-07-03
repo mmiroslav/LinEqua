@@ -6,7 +6,7 @@ language: objective-c
 
 osx_image: xcode8.3
 xcode_sdk: iphonesimulator10.3
-xcode_scheme: LinEqua_Example
+xcode_scheme: LinEqua-Example
 xcode_workspace: Example/LinEqua.xcworkspace
 
 cache: cocoapods
@@ -17,5 +17,5 @@ before_install:
 - pod install --project-directory=Example
 
 script:
-- set -o pipefail && xcodebuild clean build 	test -workspace Example/LinEqua.xcworkspace -scheme LinEqua_Example | xcpretty
+- set -o pipefail && xcodebuild clean build test -workspace Example/LinEqua.xcworkspace -scheme LinEqua-Example -destination 'platform=iOS Simulator,name=iPhone 7,OS=10.3' | xcpretty
 - pod lib lint
