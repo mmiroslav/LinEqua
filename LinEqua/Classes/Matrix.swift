@@ -8,10 +8,11 @@
 
 import UIKit
 
-public struct Matrix {
+public struct Matrix: CustomStringConvertible {
     
     public var size = Size(x: 0, y: 0)
     public var elements: [[Double]] = []
+    public let originalValue: [[Double]]?
     
     public var isSquare: Bool {
         return size.x == size.y
@@ -22,7 +23,8 @@ public struct Matrix {
     
     public init(withSize size: Size) {
         self.size = size
-        elements = [[Double]].init(repeating: [Double].init(repeating: 0.0, count: size.y), count: size.x)
+        self.elements = [[Double]].init(repeating: [Double].init(repeating: 0.0, count: size.y), count: size.x)
+        self.originalValue = self.elements
     }
     
     public init(withElements elements: [[Double]]) {
@@ -31,12 +33,14 @@ public struct Matrix {
         }
         self.size = Size(x: elements.count, y: elements[0].count)
         self.elements = elements
+        self.originalValue = self.elements
     }
     
     // MARK: override vars
     
     public var description: String {
-        return elements.reduce("") { $0 + "\($1)\n" }
+        guard let values = originalValue else { return "[]" }
+        return values.reduce("") { $0 + "\($1)\n" }
     }
     
     //MARK: functionalities
@@ -110,9 +114,27 @@ public struct Matrix {
     
     // MARK: eleimination
     
-    public static func gaussianUpperTriangle(forMatrix m: Matrix) -> Matrix {
-        var matrix = m.elements
-        // TODO: swipe row if elem at [0,0] == 0
+    public mutating func swapRow(at index1: Int, with index2: Int) {
+        let tmpRow = elements[index1]
+        elements[index1] = elements[index2]
+        elements[index2] = tmpRow
+    }
+    
+    mutating func prepareForElimination() {
+        // if 0 is on first position try to swap rows
+        if(elements[0][0] == 0) {
+            for p in 1..<elements.count {
+                if elements[p][0] != 0 {
+                    swapRow(at: 0, with: p)
+                    break
+                }
+            }
+        }
+    }
+    
+    public mutating func gaussianUpperTriangle() {
+        prepareForElimination()
+        var matrix = self.elements
         
         // upper triangle
         for i in 0..<matrix.count-1 {
@@ -130,12 +152,12 @@ public struct Matrix {
         }
         let lastRowIndex = matrix.count - 1
         if matrix[lastRowIndex][lastRowIndex] != 0 {
-            matrix[lastRowIndex] = matrix[lastRowIndex].map {$0 / matrix[lastRowIndex][lastRowIndex]}
+            matrix[lastRowIndex] = matrix[lastRowIndex].map { $0 / matrix[lastRowIndex][lastRowIndex] }
         }
         
         matrix = Matrix.cleanMatrix(matrix, with: Constant.Gaussian.threshold)
         
-        return Matrix(withElements: matrix)
+        self.elements = matrix
     }
     
     
@@ -205,10 +227,10 @@ public extension Matrix {
      * Solve system of linear equations using method of Gaussian eleimination
      *
      */
-    public func solveWithGaussian() -> [Double] {
+    public mutating func solveWithGaussian() -> [Double] {
         
-        let matrix = Matrix.gaussianUpperTriangle(forMatrix: self)
-        let results = matrix.substitute()
+        self.gaussianUpperTriangle()
+        let results = self.substitute()
         
         return results
     }
@@ -218,10 +240,10 @@ public extension Matrix {
      * Solve system of linear equations using method of Gauss-Jordan eleimination
      *
      */
-    public func solveWithGaussianJordan() -> [Double] {
+    public mutating func solveWithGaussianJordan() -> [Double] {
     
-        let matrix = Matrix.gaussianUpperTriangle(forMatrix: self)
-        let results = matrix.gaussJordan()
+        self.gaussianUpperTriangle()
+        let results = self.gaussJordan()
         
         return results
     }

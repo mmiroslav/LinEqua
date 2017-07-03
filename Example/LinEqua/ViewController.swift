@@ -15,15 +15,16 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let squareMatrixSample = Constant.SampleData.sampleMatrix4x5
+//        let squareMatrixSample = Constant.SampleData.sampleMatrix4x5
+        let squareMatrixSample = Constant.SampleData.sampleMatrix5x6
     
-        let matrixForGaussianElimination = Matrix(withElements: squareMatrixSample)
+        var matrixForGaussianElimination = Matrix(withElements: squareMatrixSample)
         print(matrixForGaussianElimination.solveWithGaussian())
 
-        let matrixForGaussJordanElimination = Matrix(withElements: squareMatrixSample)
+        var matrixForGaussJordanElimination = Matrix(withElements: squareMatrixSample)
         print(matrixForGaussJordanElimination.solveWithGaussianJordan())
         
-        print(matrixForGaussianElimination.description)
+        print(matrixForGaussianElimination)
         
         
         //////////////////////////////////////////////////////////////////
