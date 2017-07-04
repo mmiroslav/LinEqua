@@ -2,6 +2,7 @@ use_frameworks!
 
 target 'LinEqua_Example' do
   pod 'LinEqua', :path => '../'
+  pod 'MBProgressHUD', '~> 1.0'
 
   target 'LinEqua_Tests' do
     inherit! :search_paths

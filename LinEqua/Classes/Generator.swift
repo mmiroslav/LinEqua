@@ -10,6 +10,7 @@ import UIKit
 
 public class Generator: NSObject {
     var size: Size
+    var zeroVolume: Double = 0.12
     
     public override init() {
         self.size = Size.zero
@@ -21,6 +22,10 @@ public class Generator: NSObject {
     
     public func setSize(_ size: Size) {
         self.size = size
+    }
+    
+    public func setZero(volume: Double) {
+        self.zeroVolume = volume
     }
     
     public func generateMatrix() -> Matrix {
@@ -39,6 +44,11 @@ public class Generator: NSObject {
     }
     
     func randomNumberInRange(from: Int, to: Int) -> Int {
+        let zeroMatch = arc4random_uniform(100)
+        if Double(zeroMatch) < self.zeroVolume * 100 {
+            return 0
+        }
+        
         return Int(arc4random_uniform(UInt32(to - from)) + UInt32(from))
     }
 }

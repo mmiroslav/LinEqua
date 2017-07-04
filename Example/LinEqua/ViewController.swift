@@ -8,7 +8,7 @@
 
 import UIKit
 import LinEqua
-
+import MBProgressHUD
 
 class ViewController: UIViewController {
 
@@ -23,6 +23,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var gaussHeight: NSLayoutConstraint!
     @IBOutlet weak var gausJordanHeight: NSLayoutConstraint!
     
+    @IBOutlet weak var resultsStackView: UIStackView!
     
     let generator = Generator()
     var matrix = Matrix(withSize: Size.zero)
@@ -58,6 +59,12 @@ class ViewController: UIViewController {
         
         matrix.timeDelegate = self
         setupTimeBars()
+        
+        if !UIDevice.current.isBatteryMonitoringEnabled {
+            UIDevice.current.isBatteryMonitoringEnabled = true
+        }
+        
+        print(UIDevice.current.batteryLevel)
     }
 
     override func didReceiveMemoryWarning() {
@@ -75,8 +82,11 @@ class ViewController: UIViewController {
         guard let unknownsCount = Int(unknownsCountText) else { return false }
         
         generator.setSize(Size(x: unknownsCount, y: unknownsCount + 1))
+        generator.setZero(volume: Double(slider.value))
         matrix = generator.generateMatrix()
         matrix.timeDelegate = self
+        
+        print(matrix)
         
         return true
     }
@@ -105,11 +115,14 @@ extension ViewController {
 
     @IBAction func calculateGaussian() {
         setTimeToZero()
-        
+        MBProgressHUD.showAdded(to: resultsStackView, animated: true)
         DispatchQueue.global(qos: .userInitiated).async {
             if self.generateMatrix() {
                 self.gaussianSolurion = self.matrix.solveWithGaussian()
-                print("done")
+                
+                DispatchQueue.main.async {
+                    MBProgressHUD.hide(for: self.resultsStackView, animated: true)
+                }
             }
         }
         
@@ -117,20 +130,29 @@ extension ViewController {
 
     @IBAction func calculateGaussJordan() {
         setTimeToZero()
+        MBProgressHUD.showAdded(to: resultsStackView, animated: true)
         DispatchQueue.global(qos: .userInitiated).async {
             if self.generateMatrix() {
                 self.gaussJordanSolurion = self.matrix.solveWithGaussianJordan()
-                print("done")
+                
+                DispatchQueue.main.async {
+                    MBProgressHUD.hide(for: self.resultsStackView, animated: true)
+                }
             }
         }
     }
 
     @IBAction func calculateBoth() {
         setTimeToZero()
+        MBProgressHUD.showAdded(to: resultsStackView, animated: true)
         DispatchQueue.global(qos: .userInitiated).async {
             if self.generateMatrix() {
                 self.gaussianSolurion = self.matrix.solveWithGaussian()
                 self.gaussJordanSolurion = self.matrix.solveWithGaussianJordan()
+                
+                DispatchQueue.main.async {
+                    MBProgressHUD.hide(for: self.resultsStackView, animated: true)
+                }
             }
         }
     }

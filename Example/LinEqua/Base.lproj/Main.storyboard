@@ -32,7 +32,7 @@
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="System Of Linear Equations" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vth-lo-o0L">
                                                         <rect key="frame" x="74" y="0.0" width="211.5" height="20.5"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                        <nil key="textColor"/>
+                                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Number Of Unknowns" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QnH-JU-74C">
@@ -307,6 +307,7 @@
                         <outlet property="gaussJordanTimeLabel" destination="rPN-CY-zpr" id="WnH-9f-yLX"/>
                         <outlet property="gaussTimeLabel" destination="dpY-bq-EGg" id="LGw-JN-Xuj"/>
                         <outlet property="noOfUnknowns" destination="geJ-X8-Dan" id="P4l-xa-oOQ"/>
+                        <outlet property="resultsStackView" destination="z7l-QQ-7PJ" id="RU9-b7-uWq"/>
                         <outlet property="slider" destination="sLy-PL-suo" id="dA3-zv-Iuz"/>
                         <outlet property="sliderPercentage" destination="qOt-ct-WAv" id="OmY-2l-gQF"/>
                         <outlet property="statsViewContainer" destination="53w-SU-qNA" id="WB2-yi-agW"/>
