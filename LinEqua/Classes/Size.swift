@@ -16,4 +16,6 @@ public struct Size {
         self.x = x
         self.y = y
     }
+    
+    public static let zero = Size(x: 0, y: 0)
 }

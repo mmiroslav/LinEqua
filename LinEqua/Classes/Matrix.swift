@@ -10,7 +10,7 @@ import UIKit
 
 public struct Matrix: CustomStringConvertible {
     
-    public var size = Size(x: 0, y: 0)
+    public var size = Size.zero
     public var elements: [[Double]] = []
     public var originalValue: [[Double]]?
     

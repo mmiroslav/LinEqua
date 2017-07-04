@@ -12,60 +12,158 @@ import LinEqua
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var noOfUnknowns: UITextField!
+    @IBOutlet weak var slider: UISlider!
+    @IBOutlet weak var sliderPercentage: UILabel!
+    @IBOutlet weak var dataTypeSegments: UISegmentedControl!
+    
+    @IBOutlet weak var statsViewContainer: UIView!
+    @IBOutlet weak var gaussTimeLabel: UILabel!
+    @IBOutlet weak var gaussJordanTimeLabel: UILabel!
+    @IBOutlet weak var gaussHeight: NSLayoutConstraint!
+    @IBOutlet weak var gausJordanHeight: NSLayoutConstraint!
+    
+    
+    let generator = Generator()
+    var matrix = Matrix(withSize: Size.zero)
+    
+    var gaussianSolurion: [Double]?
+    var gaussJordanSolurion: [Double]?
+    var _gaussTime: Double?
+    var _gaussJordanTime: Double?
+    
+    var gaussTime: Double? {
+        get {
+            return _gaussTime
+        }
+        set {
+            _gaussTime = newValue
+            gaussTimeLabel.text = String(format: "%.4f", _gaussTime ?? 0.0)
+            setupTimeBars()
+        }
+    }
+    var gaussJordanTime: Double? {
+        get {
+            return _gaussJordanTime
+        }
+        set {
+            _gaussJordanTime = newValue
+            gaussJordanTimeLabel.text = String(format: "%.4f", _gaussJordanTime ?? 0.0)
+            setupTimeBars()
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        let squareMatrixSample = Constant.SampleData.sampleMatrix4x5
-//        let squareMatrixSample = Constant.SampleData.sampleMatrix5x6
-//
-//        var matrixForGaussianElimination = Matrix(withElements: squareMatrixSample)
-//        matrixForGaussianElimination.timeDelegate = self
-//        print("determinant: \(matrixForGaussianElimination.determinantRecursive(matrixForGaussianElimination))")
-//        print(matrixForGaussianElimination.solveWithGaussian())
-//
-//        var matrixForGaussJordanElimination = Matrix(withElements: squareMatrixSample)
-//        matrixForGaussJordanElimination.timeDelegate = self
-//        print(matrixForGaussJordanElimination.solveWithGaussianJordan())
-//        
-//        print(matrixForGaussianElimination)
-        
-//        
-//        
-        let generator = Generator(withSize: Size(x: 50, y: 51))
-        var generatedMatrix = generator.generateMatrix()
-        generatedMatrix.timeDelegate = self
-        print(generatedMatrix)
-//        print(generatedMatrix.determinant())
-        
-        var genMatrixForGJ = generatedMatrix
-        var genMatrixForGOnly = generatedMatrix
-
-        _ = genMatrixForGOnly.solveWithGaussian()
-        _ = genMatrixForGJ.solveWithGaussianJordan()
-        
-//        print("Gaussian: \(genMatrixForGOnly.solveWithGaussian())")
-//        print("GaussJor: \(genMatrixForGJ.solveWithGaussianJordan())")
-        
-
+        matrix.timeDelegate = self
+        setupTimeBars()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
+    func setTimeToZero() {
+        gaussTime = 0.0
+        gaussJordanTime = 0.0
+    }
+    
+    func generateMatrix() -> Bool {
+        guard let unknownsCountText = noOfUnknowns.text else { return false }
+        guard let unknownsCount = Int(unknownsCountText) else { return false }
+        
+        generator.setSize(Size(x: unknownsCount, y: unknownsCount + 1))
+        matrix = generator.generateMatrix()
+        matrix.timeDelegate = self
+        
+        return true
+    }
+    
+    func setupTimeBars() {
+        let baseHeight = 16.0
+        let gaussT = gaussTime ?? 0.0
+        let gaussJordanT = gaussJordanTime ?? 0.0
+        
+        let maxTime = max(gaussT, gaussJordanT)
+        if maxTime != 0 {
+            gaussHeight.constant = CGFloat(gaussT / maxTime * 100.0 + baseHeight)
+            gausJordanHeight.constant = CGFloat(gaussJordanT / maxTime * 100.0 + baseHeight)
+        } else {
+            gaussHeight.constant = CGFloat(baseHeight)
+            gausJordanHeight.constant = CGFloat(baseHeight)
+        }
+    }
 }
+
+extension ViewController {
+    
+    @IBAction func sliderChange(_ sender: UISlider) {
+        sliderPercentage.text = "\(Int(sender.value * 100.0))%"
+    }
+
+    @IBAction func calculateGaussian() {
+        setTimeToZero()
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            if self.generateMatrix() {
+                self.gaussianSolurion = self.matrix.solveWithGaussian()
+                print("done")
+            }
+        }
+        
+    }
+
+    @IBAction func calculateGaussJordan() {
+        setTimeToZero()
+        DispatchQueue.global(qos: .userInitiated).async {
+            if self.generateMatrix() {
+                self.gaussJordanSolurion = self.matrix.solveWithGaussianJordan()
+                print("done")
+            }
+        }
+    }
+
+    @IBAction func calculateBoth() {
+        setTimeToZero()
+        DispatchQueue.global(qos: .userInitiated).async {
+            if self.generateMatrix() {
+                self.gaussianSolurion = self.matrix.solveWithGaussian()
+                self.gaussJordanSolurion = self.matrix.solveWithGaussianJordan()
+            }
+        }
+    }
+
+    @IBAction func showMatrix() {
+    }
+    
+    
+    
+    @IBAction func onTap(_ sender: Any) {
+        noOfUnknowns.resignFirstResponder()
+    }
+}
+
 
 extension ViewController: MatrixTimeMeasureProtocol {
     func timeOfExecutiongGaussian(duration time: CFAbsoluteTime, for matrix: Matrix) {
         print("Time for Gaussian: \(time)")
+        DispatchQueue.main.sync {
+            gaussTime = time
+        }
+        
     }
     
     func timeOfExecutiongGaussJordan(duration time: CFAbsoluteTime, for matrix: Matrix) {
         print("Time for Gauss-Jordan: \(time)")
+        DispatchQueue.main.sync {
+            gaussJordanTime = time
+        }
     }
     
     func timeOfDeterminantCalculation(duration time: CFAbsoluteTime, for matrix: Matrix) {
         print("Time for Determinant calculation: \(time)")
     }
 }
+

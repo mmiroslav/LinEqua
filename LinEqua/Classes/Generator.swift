@@ -11,10 +11,17 @@ import UIKit
 public class Generator: NSObject {
     var size: Size
     
+    public override init() {
+        self.size = Size.zero
+    }
+    
     public init(withSize size: Size) {
         self.size = size
     }
     
+    public func setSize(_ size: Size) {
+        self.size = size
+    }
     
     public func generateMatrix() -> Matrix {
         var matrix = Matrix(withSize: size)
