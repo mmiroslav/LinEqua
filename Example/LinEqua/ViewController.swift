@@ -116,7 +116,7 @@ extension ViewController {
     @IBAction func calculateGaussian() {
         setTimeToZero()
         MBProgressHUD.showAdded(to: resultsStackView, animated: true)
-        DispatchQueue.global(qos: .userInitiated).async {
+        DispatchQueue.global(qos: .userInteractive).async {
             if self.generateMatrix() {
                 self.gaussianSolurion = self.matrix.solveWithGaussian()
                 
@@ -131,7 +131,7 @@ extension ViewController {
     @IBAction func calculateGaussJordan() {
         setTimeToZero()
         MBProgressHUD.showAdded(to: resultsStackView, animated: true)
-        DispatchQueue.global(qos: .userInitiated).async {
+        DispatchQueue.global(qos: .userInteractive).async {
             if self.generateMatrix() {
                 self.gaussJordanSolurion = self.matrix.solveWithGaussianJordan()
                 

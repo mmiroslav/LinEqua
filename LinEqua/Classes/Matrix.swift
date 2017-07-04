@@ -64,24 +64,31 @@ public struct Matrix: CustomStringConvertible {
     
     // MARK: determinant
     
-    public func determinant() -> Double {
-        let time = BlockTime()
-        time.startTime()
+//    public func determinant() -> Double {
+//        let time = BlockTime()
+//        time.startTime()
+//        
+//        var det = 0.0
+//        if elements.count + 1 == elements[0].count {
+//            var squareMatrix = self
+//            squareMatrix.removeCollumn(at: squareMatrix.elements[0].count - 1)
+//            det = determinantRecursive(squareMatrix)
+//        } else {
+//            det = determinantRecursive(self)
+//        }
+//        
+//        let duration = time.stopTime()
+//        print("Duration\(duration)")
+//        self.timeDelegate?.timeOfDeterminantCalculation(duration: duration, for: self)
+//        
+//        return det
+//    }
+    
+    public mutating func determinant() -> Double {
+        updateOriginals()
+        gaussianUpperTriangle()
         
-        var det = 0.0
-        if elements.count + 1 == elements[0].count {
-            var squareMatrix = self
-            squareMatrix.removeCollumn(at: squareMatrix.elements[0].count - 1)
-            det = determinantRecursive(squareMatrix)
-        } else {
-            det = determinantRecursive(self)
-        }
-        
-        let duration = time.stopTime()
-        print("Duration\(duration)")
-        self.timeDelegate?.timeOfDeterminantCalculation(duration: duration, for: self)
-        
-        return det
+        return Matrix.determinantForTriangleMatrix(self)
     }
     
     /**
@@ -100,14 +107,10 @@ public struct Matrix: CustomStringConvertible {
                 var subMatrix = matrix
                 subMatrix.removeRow(at: 0)
                 subMatrix.removeCollumn(at: column)
-//                print(subMatrix)
-//                print("Value: \(value)")
+                
                 let prev = determinantRecursive(subMatrix)
                 det += value * sign * prev
                 sign *= -1.0
-//                print(value)
-//                print(det)
-                
             }
             return det
         }
@@ -175,7 +178,9 @@ public struct Matrix: CustomStringConvertible {
         var mul: Double = 0.0
         for i in 0..<matrix.count-1 {
             pivot = matrix[i][i]
-            matrix[i] = matrix[i].map { $0 / pivot }
+            if pivot != 0.0 {
+                matrix[i] = matrix[i].map { $0 / pivot }
+            }
             for j in i+1..<matrix.count {
                 pivotRow = matrix[i]
                 
@@ -212,33 +217,6 @@ public struct Matrix: CustomStringConvertible {
         return m
     }
 
-    
-    public func gaussJordan() -> [Double]{
-        var matrix = self.elements
-
-        // diagonal only
-        var pivotRow: [Double] = [Double]()
-        var mul: Double = 0.0
-        for i in (1..<matrix.count).reversed() {
-            for j in (0..<i).reversed() {
-                pivotRow = matrix[i]
-                mul = matrix[j][i]
-                pivotRow = pivotRow.map { $0 * mul }
-                
-                for k in 0..<matrix[j].count {
-                    matrix[j][k] -= pivotRow[k]
-                }
-            }
-        }
-        
-        var sol = [Double](repeating: 0.0, count: matrix.count)
-        for i in 0..<matrix.count {
-            sol[i] = matrix[i].last!
-        }
-        
-        return sol
-    }
-    
     public func substitute() -> [Double] {
         var matrix = elements
         var sol = [Double](repeating: 0.0, count: matrix.count)
@@ -252,6 +230,40 @@ public struct Matrix: CustomStringConvertible {
                 substract += vector[k] * sol[k]
             }
             sol[i] = vector.last! - substract
+        }
+        
+        return sol
+    }
+    
+    
+    public mutating func gaussJordan() -> [Double] {
+        prepareForElimination()
+        var matrix = self.elements
+        
+        var pivotRow: [Double] = [Double]()
+        var pivot: Double = 0.0
+        var mul: Double = 0.0
+        for i in 0..<matrix.count {
+            pivot = matrix[i][i]
+            matrix[i] = matrix[i].map { $0 / pivot }
+            for j in 0..<matrix.count {
+                if j == i { continue }
+                pivotRow = matrix[i]
+                
+                mul = matrix[j][i]
+                pivotRow = pivotRow.map { $0 * mul }
+                
+                for k in 0..<matrix[j].count {
+                    matrix[j][k] -= pivotRow[k]
+                }
+            }
+        }
+
+        matrix = Matrix.cleanMatrix(matrix, with: Constant.Gaussian.threshold)
+        
+        var sol = [Double](repeating: 0.0, count: matrix.count)
+        for i in 0..<matrix.count {
+            sol[i] = matrix[i].last!
         }
         
         return sol
@@ -277,6 +289,7 @@ public extension Matrix {
         
         self.gaussianUpperTriangle()
         let results = self.substitute()
+        print(results)
         
         let duration = time.stopTime()
         self.timeDelegate?.timeOfExecutiongGaussian(duration: duration, for: self)
@@ -298,8 +311,8 @@ public extension Matrix {
         
         time.startTime()
         
-        self.gaussianUpperTriangle()
         let results = self.gaussJordan()
+        print(results)
         
         let duration = time.stopTime()
         self.timeDelegate?.timeOfExecutiongGaussJordan(duration: duration, for: self)

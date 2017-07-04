@@ -31,13 +31,13 @@ public class Generator: NSObject {
     public func generateMatrix() -> Matrix {
         var matrix = Matrix(withSize: size)
     
-//        repeat {
+        repeat {
             for i in 0..<size.x {
                 for j in 0..<size.y {
                     matrix.elements[i][j] = Double(randomNumberInRange(from: 0, to: 30))
                 }
             }
-//        } while matrix.determinant() == 0.0
+        } while matrix.determinant() == 0.0
         
         matrix.updateOriginals()
         return matrix
