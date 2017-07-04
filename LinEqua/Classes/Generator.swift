@@ -8,7 +8,7 @@
 
 import UIKit
 
-public class Generator: NSObject {
+public class Generator<T>: NSObject {
     var size: Size
     var zeroVolume: Double = 0.12
     
@@ -28,8 +28,8 @@ public class Generator: NSObject {
         self.zeroVolume = volume
     }
     
-    public func generateMatrix() -> Matrix {
-        var matrix = Matrix(withSize: size)
+    public func generateMatrix() -> Matrix<T> {
+        var matrix = Matrix<T>(withSize: size)
     
 //        repeat {
             for i in 0..<size.x {

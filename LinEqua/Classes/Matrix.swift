@@ -8,11 +8,11 @@
 
 import UIKit
 
-public struct Matrix: CustomStringConvertible {
+public struct Matrix<T>: CustomStringConvertible {
     
     public var size = Size.zero
-    public var elements: [[Double]] = []
-    public var originalValue: [[Double]]?
+    public var elements: [[T]] = []
+    public var originalValue: [[T]]?
     
     public var timeDelegate: MatrixTimeMeasureProtocol?
     
@@ -25,11 +25,11 @@ public struct Matrix: CustomStringConvertible {
     
     public init(withSize size: Size) {
         self.size = size
-        self.elements = [[Double]].init(repeating: [Double].init(repeating: 0.0, count: size.y), count: size.x)
+        self.elements = [[T]].init(repeating: [T].init(repeating: 0.0, count: size.y), count: size.x)
         self.originalValue = self.elements
     }
     
-    public init(withElements elements: [[Double]]) {
+    public init(withElements elements: [[T]]) {
         if elements.count <= 0 {
             fatalError("Matrix with size [0][0] not allowed")
         }
@@ -64,7 +64,7 @@ public struct Matrix: CustomStringConvertible {
     
     // MARK: determinant
     
-    public func determinant() -> Double {
+    public func determinant() -> T {
         let time = BlockTime()
         time.startTime()
         
@@ -81,39 +81,34 @@ public struct Matrix: CustomStringConvertible {
         print("Duration\(duration)")
         self.timeDelegate?.timeOfDeterminantCalculation(duration: duration, for: self)
         
-        return det
+        return det as! T
     }
     
     /**
      *  Recursive aproach
      */
-    public func determinantRecursive(_ matrix: Matrix) -> Double {
+    public func determinantRecursive(_ matrix: Matrix<T>) -> T {
         
         if matrix.elements.first?.count == 1 {
             return (matrix.elements.first?.first)!
         } else {
-            var det = 0.0
-            var sign = 1.0
+            var det: T = 0.0 as! T
+            var sign: T = 1.0 as! T
             
-            guard let firstRow = matrix.elements.first else { return 0.0 }
+            guard let firstRow = matrix.elements.first else { return 0.0 as! T }
             for (column, value) in firstRow.enumerated() {
                 var subMatrix = matrix
                 subMatrix.removeRow(at: 0)
                 subMatrix.removeCollumn(at: column)
-//                print(subMatrix)
-//                print("Value: \(value)")
-                let prev = determinantRecursive(subMatrix)
-                det += value * sign * prev
+                det += value * sign * determinantRecursive(subMatrix)
                 sign *= -1.0
-//                print(value)
-//                print(det)
                 
             }
             return det
         }
     }
     
-    public static func determinantForTriangleMatrix(_ matrix: Matrix) -> Double {
+    public static func determinantForTriangleMatrix(_ matrix: Matrix) -> T {
         guard let firstElem = matrix.elements.first?.first else { return 0.0 }
         var det = firstElem
         for i in 1..<matrix.elements.count {
@@ -135,7 +130,7 @@ public struct Matrix: CustomStringConvertible {
         if let count = elements.first?.count, index >= count {
             fatalError("Unexpected index")
         }
-        var newMatrix = [[Double]]()
+        var newMatrix = [[T]]()
         for var elem in elements {
             elem.remove(at: index)
             newMatrix.append(elem)
@@ -170,9 +165,9 @@ public struct Matrix: CustomStringConvertible {
         var matrix = self.elements
         
         // upper triangle
-        var pivotRow: [Double] = [Double]()
-        var pivot: Double = 0.0
-        var mul: Double = 0.0
+        var pivotRow: [T] = [T]()
+        var pivot: T = 0.0
+        var mul: T = 0.0
         for i in 0..<matrix.count-1 {
             pivot = matrix[i][i]
             matrix[i] = matrix[i].map { $0 / pivot }
@@ -198,9 +193,9 @@ public struct Matrix: CustomStringConvertible {
     }
     
     
-    static func cleanMatrix(_ matrix: [[Double]], with trashold: Double) -> [[Double]] {
+    static func cleanMatrix(_ matrix: [[T]], with trashold: Double) -> [[T]] {
         var m = matrix
-        guard let numberOfColumns = m.first?.count else { return [[Double]]() }
+        guard let numberOfColumns = m.first?.count else { return [[T]]() }
    
         for i in 0..<m.count {
             for j in 0..<numberOfColumns {
@@ -213,12 +208,12 @@ public struct Matrix: CustomStringConvertible {
     }
 
     
-    public func gaussJordan() -> [Double]{
+    public func gaussJordan() -> [T]{
         var matrix = self.elements
 
         // diagonal only
-        var pivotRow: [Double] = [Double]()
-        var mul: Double = 0.0
+        var pivotRow: [T] = [T]()
+        var mul: T = 0.0
         for i in (1..<matrix.count).reversed() {
             for j in (0..<i).reversed() {
                 pivotRow = matrix[i]
@@ -231,7 +226,7 @@ public struct Matrix: CustomStringConvertible {
             }
         }
         
-        var sol = [Double](repeating: 0.0, count: matrix.count)
+        var sol = [T](repeating: 0.0, count: matrix.count)
         for i in 0..<matrix.count {
             sol[i] = matrix[i].last!
         }
@@ -239,13 +234,13 @@ public struct Matrix: CustomStringConvertible {
         return sol
     }
     
-    public func substitute() -> [Double] {
+    public func substitute() -> [T] {
         var matrix = elements
-        var sol = [Double](repeating: 0.0, count: matrix.count)
+        var sol = [T](repeating: 0.0, count: matrix.count)
         sol[sol.count - 1] = matrix[matrix.count - 1][matrix.count]
         
         for i in (0..<matrix.count - 1).reversed() {
-            var vector: [Double] = matrix[i]
+            var vector: [T] = matrix[i]
             
             var substract = 0.0
             for k in 0..<sol.count {
@@ -266,7 +261,7 @@ public extension Matrix {
      * Solve system of linear equations using method of Gaussian eleimination
      *
      */
-    public mutating func solveWithGaussian() -> [Double] {
+    public mutating func solveWithGaussian() -> [T] {
         let time = BlockTime()
         
         if let originals = originalValue {
@@ -289,7 +284,7 @@ public extension Matrix {
      * Solve system of linear equations using method of Gauss-Jordan eleimination
      *
      */
-    public mutating func solveWithGaussianJordan() -> [Double] {
+    public mutating func solveWithGaussianJordan() -> [T] {
         let time = BlockTime()
         
         if let originals = originalValue {
