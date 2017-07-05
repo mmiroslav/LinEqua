@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A56DA331F0CF25000045485 /* MatrixCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A56DA321F0CF25000045485 /* MatrixCollectionViewController.swift */; };
+		0A71960A1F0D2B59000FD806 /* CustomLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7196091F0D2B59000FD806 /* CustomLayout.swift */; };
+		0A71960D1F0D45DB000FD806 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A71960C1F0D45DA000FD806 /* Data.swift */; };
+		0AF593831F0D132300B27B45 /* SampleCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF593811F0D132300B27B45 /* SampleCollectionViewCell.swift */; };
+		0AF593841F0D132300B27B45 /* SampleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0AF593821F0D132300B27B45 /* SampleCollectionViewCell.xib */; };
+		0AF74F331F0D24520034A82F /* DataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF74F321F0D24520034A82F /* DataViewController.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
@@ -29,6 +35,12 @@
 
 /* Begin PBXFileReference section */
 		05BBECB4CA8B28D9B963F936 /* LinEqua.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LinEqua.podspec; path = ../LinEqua.podspec; sourceTree = "<group>"; };
+		0A56DA321F0CF25000045485 /* MatrixCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatrixCollectionViewController.swift; sourceTree = "<group>"; };
+		0A7196091F0D2B59000FD806 /* CustomLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CustomLayout.swift; path = Collection/CustomLayout.swift; sourceTree = "<group>"; };
+		0A71960C1F0D45DA000FD806 /* Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Data.swift; path = Data/Data.swift; sourceTree = "<group>"; };
+		0AF593811F0D132300B27B45 /* SampleCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SampleCollectionViewCell.swift; path = Collection/SampleCollectionViewCell.swift; sourceTree = "<group>"; };
+		0AF593821F0D132300B27B45 /* SampleCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SampleCollectionViewCell.xib; path = Collection/SampleCollectionViewCell.xib; sourceTree = "<group>"; };
+		0AF74F321F0D24520034A82F /* DataViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataViewController.swift; path = Collection/DataViewController.swift; sourceTree = "<group>"; };
 		0D019C0573B53255F35F6DC6 /* Pods-LinEqua_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LinEqua_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-LinEqua_Tests/Pods-LinEqua_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		10800C9EEAFC5F70A725D993 /* Pods_LinEqua_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LinEqua_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		388853DFD886FDDC5B4BE4A7 /* Pods-LinEqua_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LinEqua_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-LinEqua_Example/Pods-LinEqua_Example.release.xcconfig"; sourceTree = "<group>"; };
@@ -69,6 +81,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0A71960B1F0D45C1000FD806 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				0A71960C1F0D45DA000FD806 /* Data.swift */,
+			);
+			name = Data;
+			sourceTree = "<group>";
+		};
+		0AF5937E1F0D0AE200B27B45 /* Collection */ = {
+			isa = PBXGroup;
+			children = (
+				0AF593811F0D132300B27B45 /* SampleCollectionViewCell.swift */,
+				0AF593821F0D132300B27B45 /* SampleCollectionViewCell.xib */,
+				0AF74F321F0D24520034A82F /* DataViewController.swift */,
+				0A7196091F0D2B59000FD806 /* CustomLayout.swift */,
+			);
+			name = Collection;
+			sourceTree = "<group>";
+		};
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
@@ -93,8 +124,11 @@
 		607FACD21AFB9204008FA782 /* Example for LinEqua */ = {
 			isa = PBXGroup;
 			children = (
+				0A71960B1F0D45C1000FD806 /* Data */,
+				0AF5937E1F0D0AE200B27B45 /* Collection */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
+				0A56DA321F0CF25000045485 /* MatrixCollectionViewController.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
@@ -252,6 +286,7 @@
 			files = (
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
+				0AF593841F0D132300B27B45 /* SampleCollectionViewCell.xib in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -363,7 +398,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A71960D1F0D45DB000FD806 /* Data.swift in Sources */,
+				0A71960A1F0D2B59000FD806 /* CustomLayout.swift in Sources */,
+				0A56DA331F0CF25000045485 /* MatrixCollectionViewController.swift in Sources */,
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
+				0AF74F331F0D24520034A82F /* DataViewController.swift in Sources */,
+				0AF593831F0D132300B27B45 /* SampleCollectionViewCell.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

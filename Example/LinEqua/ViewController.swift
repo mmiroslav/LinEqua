@@ -28,8 +28,8 @@ class ViewController: UIViewController {
     let generator = Generator()
     var matrix = Matrix(withSize: Size.zero)
     
-    var gaussianSolurion: [Double]?
-    var gaussJordanSolurion: [Double]?
+    var gaussianSolution: [Double]?
+    var gaussJordanSolution: [Double]?
     var _gaussTime: Double?
     var _gaussJordanTime: Double?
     
@@ -86,7 +86,9 @@ class ViewController: UIViewController {
         matrix = generator.generateMatrix()
         matrix.timeDelegate = self
         
+        Data.shared.generatedMatrix = matrix
         print(matrix)
+        
         
         return true
     }
@@ -118,7 +120,8 @@ extension ViewController {
         MBProgressHUD.showAdded(to: resultsStackView, animated: true)
         DispatchQueue.global(qos: .userInteractive).async {
             if self.generateMatrix() {
-                self.gaussianSolurion = self.matrix.solveWithGaussian()
+                self.gaussianSolution = self.matrix.solveWithGaussian()
+                Data.shared.resultsGauss = self.gaussianSolution
                 
                 DispatchQueue.main.async {
                     MBProgressHUD.hide(for: self.resultsStackView, animated: true)
@@ -133,7 +136,8 @@ extension ViewController {
         MBProgressHUD.showAdded(to: resultsStackView, animated: true)
         DispatchQueue.global(qos: .userInteractive).async {
             if self.generateMatrix() {
-                self.gaussJordanSolurion = self.matrix.solveWithGaussianJordan()
+                self.gaussJordanSolution = self.matrix.solveWithGaussianJordan()
+                Data.shared.resultsGaussJordan = self.gaussJordanSolution
                 
                 DispatchQueue.main.async {
                     MBProgressHUD.hide(for: self.resultsStackView, animated: true)
@@ -147,8 +151,8 @@ extension ViewController {
         MBProgressHUD.showAdded(to: resultsStackView, animated: true)
         DispatchQueue.global(qos: .userInitiated).async {
             if self.generateMatrix() {
-                self.gaussianSolurion = self.matrix.solveWithGaussian()
-                self.gaussJordanSolurion = self.matrix.solveWithGaussianJordan()
+                self.gaussianSolution = self.matrix.solveWithGaussian()
+                self.gaussJordanSolution = self.matrix.solveWithGaussianJordan()
                 
                 DispatchQueue.main.async {
                     MBProgressHUD.hide(for: self.resultsStackView, animated: true)

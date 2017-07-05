@@ -42,6 +42,12 @@ public struct Matrix: CustomStringConvertible {
         self.originalValue = self.elements
     }
     
+    public mutating func updateValues() {
+        self.elements = self.originalValue!
+    }
+    
+    
+    
     // MARK: override vars
     
     public var description: String {
@@ -64,31 +70,12 @@ public struct Matrix: CustomStringConvertible {
     
     // MARK: determinant
     
-//    public func determinant() -> Double {
-//        let time = BlockTime()
-//        time.startTime()
-//        
-//        var det = 0.0
-//        if elements.count + 1 == elements[0].count {
-//            var squareMatrix = self
-//            squareMatrix.removeCollumn(at: squareMatrix.elements[0].count - 1)
-//            det = determinantRecursive(squareMatrix)
-//        } else {
-//            det = determinantRecursive(self)
-//        }
-//        
-//        let duration = time.stopTime()
-//        print("Duration\(duration)")
-//        self.timeDelegate?.timeOfDeterminantCalculation(duration: duration, for: self)
-//        
-//        return det
-//    }
-    
     public mutating func determinant() -> Double {
         updateOriginals()
         gaussianUpperTriangle()
-        
-        return Matrix.determinantForTriangleMatrix(self)
+        let det =  Matrix.determinantForTriangleMatrix(self)
+        updateValues()
+        return det
     }
     
     /**

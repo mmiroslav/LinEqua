@@ -39,7 +39,6 @@ public class Generator: NSObject {
             }
         } while matrix.determinant() == 0.0
         
-        matrix.updateOriginals()
         return matrix
     }
     
