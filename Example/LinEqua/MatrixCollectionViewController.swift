@@ -46,13 +46,13 @@ class MatrixCollectionViewController: UICollectionViewController {
     // MARK: UICollectionViewDataSource
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        guard let count = Data.shared.generatedMatrix?.originalValue?.count else { return 0 }
+        guard let count = Data.shared.matrix?.originalValue?.count else { return 0 }
         return count
     }
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let count = Data.shared.generatedMatrix?.originalValue?[section].count else { return 0 }
+        guard let count = Data.shared.matrix?.originalValue?[section].count else { return 0 }
         return count
     }
 
@@ -62,7 +62,7 @@ class MatrixCollectionViewController: UICollectionViewController {
         }
     
         
-        if let value = Data.shared.generatedMatrix?.originalValue?[indexPath.section][indexPath.row] {
+        if let value = Data.shared.matrix?.originalValue?[indexPath.section][indexPath.row] {
             cell.valueLabel.text = String(format: "%.1f", value)
         }
         

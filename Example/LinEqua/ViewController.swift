@@ -54,6 +54,7 @@ class ViewController: UIViewController {
         }
     }
     
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -67,6 +68,15 @@ class ViewController: UIViewController {
         print(UIDevice.current.batteryLevel)
     }
 
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let matrix = Data.shared.matrix {
+            self.matrix = matrix
+        }
+    }
+    
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -119,13 +129,12 @@ extension ViewController {
         setTimeToZero()
         MBProgressHUD.showAdded(to: resultsStackView, animated: true)
         DispatchQueue.global(qos: .userInteractive).async {
-            if self.generateMatrix() {
+            if Data.shared.matrix != nil {
                 self.gaussianSolution = self.matrix.solveWithGaussian()
                 Data.shared.resultsGauss = self.gaussianSolution
-                
-                DispatchQueue.main.async {
-                    MBProgressHUD.hide(for: self.resultsStackView, animated: true)
-                }
+            }
+            DispatchQueue.main.async {
+                MBProgressHUD.hide(for: self.resultsStackView, animated: true)
             }
         }
         
@@ -135,28 +144,29 @@ extension ViewController {
         setTimeToZero()
         MBProgressHUD.showAdded(to: resultsStackView, animated: true)
         DispatchQueue.global(qos: .userInteractive).async {
-            if self.generateMatrix() {
+            if Data.shared.matrix != nil {
                 self.gaussJordanSolution = self.matrix.solveWithGaussianJordan()
                 Data.shared.resultsGaussJordan = self.gaussJordanSolution
-                
-                DispatchQueue.main.async {
-                    MBProgressHUD.hide(for: self.resultsStackView, animated: true)
-                }
             }
+            DispatchQueue.main.async {
+                MBProgressHUD.hide(for: self.resultsStackView, animated: true)
+            }
+            
         }
     }
 
     @IBAction func calculateBoth() {
         setTimeToZero()
         MBProgressHUD.showAdded(to: resultsStackView, animated: true)
-        DispatchQueue.global(qos: .userInitiated).async {
-            if self.generateMatrix() {
+        DispatchQueue.global(qos: .userInteractive).async {
+            if Data.shared.matrix != nil {
                 self.gaussianSolution = self.matrix.solveWithGaussian()
                 self.gaussJordanSolution = self.matrix.solveWithGaussianJordan()
-                
-                DispatchQueue.main.async {
-                    MBProgressHUD.hide(for: self.resultsStackView, animated: true)
-                }
+                Data.shared.resultsGauss = self.gaussianSolution
+                Data.shared.resultsGaussJordan = self.gaussJordanSolution
+            }
+            DispatchQueue.main.async {
+                MBProgressHUD.hide(for: self.resultsStackView, animated: true)
             }
         }
     }
@@ -164,6 +174,16 @@ extension ViewController {
     @IBAction func showMatrix() {
     }
     
+    
+    @IBAction func generateMatrixAction() {
+        MBProgressHUD.showAdded(to: resultsStackView, animated: true)
+        DispatchQueue.global(qos: .userInteractive).async {
+            _ = self.generateMatrix()
+            DispatchQueue.main.async {
+                MBProgressHUD.hide(for: self.resultsStackView, animated: true)
+            }
+        }
+    }
     
     
     @IBAction func onTap(_ sender: Any) {

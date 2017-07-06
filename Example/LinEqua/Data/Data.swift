@@ -12,8 +12,15 @@ import LinEqua
 class Data: NSObject {
     static let shared = Data()
     
-    var matrix: Matrix?
+    var matrix: Matrix? {
+        if insertedMatrix != nil {
+            return insertedMatrix
+        }
+        return generatedMatrix
+    }
+    
     var generatedMatrix: Matrix?
+    var insertedMatrix: Matrix?
     
     var resultsGauss: [Any]? = []
     var resultsGaussJordan: [Any]? = []
