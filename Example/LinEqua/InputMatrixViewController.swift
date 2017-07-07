@@ -29,6 +29,31 @@ class InputMatrixViewController: UIViewController {
     @IBOutlet weak var res3: UITextField!
     
     
+    var matrix: [[Double]] {
+        get {
+            return [
+                [
+                    valueFromInput(input1),
+                    valueFromInput(input2),
+                    valueFromInput(input3),
+                    valueFromInput(res1),
+                    ],
+                [
+                    valueFromInput(input4),
+                    valueFromInput(input5),
+                    valueFromInput(input6),
+                    valueFromInput(res2),
+                    ],
+                [
+                    valueFromInput(input7),
+                    valueFromInput(input8),
+                    valueFromInput(input9),
+                    valueFromInput(res3),
+                    ],
+            ]
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -61,34 +86,18 @@ class InputMatrixViewController: UIViewController {
     
     
     @IBAction func closeModal() {
-        updateMatixinData()
-        
-        self.dismiss(animated: true, completion: nil)
+        let det = matrixDeterminant()
+        if det == 0.0 {
+            let alert = createAlertForDeterminant(det)
+            self.present(alert, animated: true, completion: nil)
+        } else {
+            updateMatixinData()
+            self.dismiss(animated: true, completion: nil)
+        }
     }
     
     
     func updateMatixinData() {
-        let matrix: [[Double]] = [
-            [
-                valueFromInput(input1),
-                valueFromInput(input2),
-                valueFromInput(input3),
-                valueFromInput(res1),
-            ],
-            [
-                valueFromInput(input4),
-                valueFromInput(input5),
-                valueFromInput(input6),
-                valueFromInput(res2),
-            ],
-            [
-                valueFromInput(input7),
-                valueFromInput(input8),
-                valueFromInput(input9),
-                valueFromInput(res3),
-            ],
-        ]
-        
         Data.shared.insertedMatrix = Matrix(withElements: matrix)
     }
     
@@ -112,7 +121,26 @@ class InputMatrixViewController: UIViewController {
     
     
     @IBAction func checkDeterminant() {
+        let det = self.matrixDeterminant()
         
-        // TODO: implement some alert
+        let alert = createAlertForDeterminant(det)
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    
+    func createAlertForDeterminant(_ det: Double) -> UIAlertController {
+        let alertController = UIAlertController(title: "Determinant", message: "System determinant is: \(det)", preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action: UIAlertAction!) in
+            alertController.dismiss(animated: true, completion: nil)
+        }
+        alertController.addAction(cancelAction)
+        
+        return alertController
+    }
+    
+    
+    func matrixDeterminant() -> Double {
+        var matr = Matrix(withElements: matrix)
+        return matr.determinant()
     }
 }
