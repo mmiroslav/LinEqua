@@ -22,8 +22,8 @@ class Data: NSObject {
     var generatedMatrix: Matrix?
     var insertedMatrix: Matrix?
     
-    var resultsGauss: [Any]? = []
-    var resultsGaussJordan: [Any]? = []
+    var resultsGauss: [Double]? = []
+    var resultsGaussJordan: [Double]? = []
     
     private override init() {}
     

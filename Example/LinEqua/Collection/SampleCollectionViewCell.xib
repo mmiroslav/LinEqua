@@ -18,7 +18,7 @@
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="bgw-Lq-rxg">
-                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                        <rect key="frame" x="2" y="2" width="46" height="46"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
@@ -26,11 +26,11 @@
                 </subviews>
             </view>
             <constraints>
-                <constraint firstItem="bgw-Lq-rxg" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="4Sp-OK-atz"/>
-                <constraint firstAttribute="bottom" secondItem="bgw-Lq-rxg" secondAttribute="bottom" id="7Qi-fk-Kl6"/>
-                <constraint firstAttribute="trailing" secondItem="bgw-Lq-rxg" secondAttribute="trailing" id="PBt-wK-gxQ"/>
+                <constraint firstItem="bgw-Lq-rxg" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="2" id="4Sp-OK-atz"/>
+                <constraint firstAttribute="bottom" secondItem="bgw-Lq-rxg" secondAttribute="bottom" constant="2" id="7Qi-fk-Kl6"/>
+                <constraint firstAttribute="trailing" secondItem="bgw-Lq-rxg" secondAttribute="trailing" constant="2" id="PBt-wK-gxQ"/>
                 <constraint firstItem="bgw-Lq-rxg" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="ary-02-sY1"/>
-                <constraint firstItem="bgw-Lq-rxg" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="qwB-UI-Soc"/>
+                <constraint firstItem="bgw-Lq-rxg" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="2" id="qwB-UI-Soc"/>
                 <constraint firstItem="bgw-Lq-rxg" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="uAb-Lr-vsK"/>
             </constraints>
             <connections>

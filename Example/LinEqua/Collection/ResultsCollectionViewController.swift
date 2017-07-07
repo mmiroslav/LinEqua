@@ -27,13 +27,13 @@ class ResultsCollectionViewController: UICollectionViewController {
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         let countGauss = Data.shared.resultsGauss?.count ?? 0
-        let countGaussJordan =  0 // Data.shared.resultsGauss?.count ?? 0 // TODO 
-        return max(countGauss, countGaussJordan)
+        let countGaussJordan = Data.shared.resultsGauss?.count ?? 0 
+        return 1 + max(countGauss, countGaussJordan)
     }
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 2
+        return 3
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -46,8 +46,35 @@ class ResultsCollectionViewController: UICollectionViewController {
     }
 
     func valueForIndexPath(_ indexPath: IndexPath) -> String {
-        guard let res = Data.shared.resultsGauss?[indexPath.section] else { return "" }
-        return "\(res)"
+        
+        // title
+        if indexPath.section == 0 {
+            switch indexPath.row {
+            case 0:
+                return "Gauss"
+            case 1:
+                return "Gauss Jordan"
+            case 2:
+                return "△"
+            default:
+                return ""
+            }
+        }
+        
+        // values
+        guard let resGauss = Data.shared.resultsGauss?[indexPath.section - 1] else { return "" }
+        guard let resGaussJordan = Data.shared.resultsGaussJordan?[indexPath.section - 1] else { return "" }
+        
+        switch indexPath.row {
+        case 0:
+            return "\(resGauss)"
+        case 1:
+            return "\(resGaussJordan)"
+        case 2:
+            return  String.init(format: "%.3f +e14", abs((resGaussJordan - resGauss) * 100_000_000_000_000))
+        default:
+            return ""
+        }
     }
 }
 
