@@ -113,7 +113,7 @@ public struct Matrix: CustomStringConvertible {
     }
     
     
-    public mutating func removeRow(at index: Int) {
+    mutating func removeRow(at index: Int) {
         if index >= elements.count {
             fatalError("Unexpected index")
         }
@@ -121,7 +121,7 @@ public struct Matrix: CustomStringConvertible {
         size = Size(x: size.x - 1, y: size.y)
     }
     
-    public mutating func removeCollumn(at index: Int) {
+    mutating func removeCollumn(at index: Int) {
         if let count = elements.first?.count, index >= count {
             fatalError("Unexpected index")
         }
@@ -137,7 +137,7 @@ public struct Matrix: CustomStringConvertible {
     
     // MARK: eleimination
     
-    public mutating func swapRow(at index1: Int, with index2: Int) {
+    mutating func swapRow(at index1: Int, with index2: Int) {
         let tmpRow = elements[index1]
         elements[index1] = elements[index2]
         elements[index2] = tmpRow
@@ -155,7 +155,7 @@ public struct Matrix: CustomStringConvertible {
         }
     }
     
-    public mutating func gaussianUpperTriangle() {
+    mutating func gaussianUpperTriangle() {
         prepareForElimination()
         var matrix = self.elements
         
@@ -204,7 +204,7 @@ public struct Matrix: CustomStringConvertible {
         return m
     }
 
-    public func substitute() -> [Double] {
+    func substitute() -> [Double] {
         var matrix = elements
         var sol = [Double](repeating: 0.0, count: matrix.count)
         sol[sol.count - 1] = matrix[matrix.count - 1][matrix.count]
@@ -223,7 +223,7 @@ public struct Matrix: CustomStringConvertible {
     }
     
     
-    public mutating func gaussJordan() -> [Double] {
+    mutating func gaussJordan() -> [Double] {
         prepareForElimination()
         var matrix = self.elements
         

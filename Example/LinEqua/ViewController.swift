@@ -132,6 +132,7 @@ extension ViewController {
             if Data.shared.matrix != nil {
                 self.gaussianSolution = self.matrix.solveWithGaussian()
                 Data.shared.resultsGauss = self.gaussianSolution
+                Data.shared.resultsGaussJordan = nil
             }
             DispatchQueue.main.async {
                 MBProgressHUD.hide(for: self.resultsStackView, animated: true)
@@ -147,6 +148,7 @@ extension ViewController {
             if Data.shared.matrix != nil {
                 self.gaussJordanSolution = self.matrix.solveWithGaussianJordan()
                 Data.shared.resultsGaussJordan = self.gaussJordanSolution
+                Data.shared.resultsGauss = nil
             }
             DispatchQueue.main.async {
                 MBProgressHUD.hide(for: self.resultsStackView, animated: true)

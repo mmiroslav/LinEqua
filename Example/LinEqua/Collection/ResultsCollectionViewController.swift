@@ -8,8 +8,6 @@
 
 import UIKit
 
-private let reuseIdentifier = "Cell"
-
 class ResultsCollectionViewController: UICollectionViewController {
 
     override func viewDidLoad() {
@@ -27,13 +25,24 @@ class ResultsCollectionViewController: UICollectionViewController {
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         let countGauss = Data.shared.resultsGauss?.count ?? 0
-        let countGaussJordan = Data.shared.resultsGauss?.count ?? 0 
-        return 1 + max(countGauss, countGaussJordan)
+        let countGaussJordan = Data.shared.resultsGaussJordan?.count ?? 0
+        let maxVal = max(countGauss, countGaussJordan)
+        return 1 + maxVal
     }
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 3
+        var noOfRows = 0
+        if Data.shared.resultsGauss != nil {
+            noOfRows += 1
+        }
+        if Data.shared.resultsGaussJordan != nil {
+            noOfRows += 1
+        }
+        if noOfRows == 2 { // if compareable
+            noOfRows += 1
+        }
+        return noOfRows
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -46,37 +55,47 @@ class ResultsCollectionViewController: UICollectionViewController {
     }
 
     func valueForIndexPath(_ indexPath: IndexPath) -> String {
-        
         // title
         if indexPath.section == 0 {
-            switch indexPath.row {
-            case 0:
-                return "Gauss"
-            case 1:
-                return "Gauss Jordan"
-            case 2:
-                return "△"
-            default:
-                return ""
-            }
+            return titlesArr[indexPath.row]
         }
         
         // values
-        guard let resGauss = Data.shared.resultsGauss?[indexPath.section - 1] else { return "" }
-        guard let resGaussJordan = Data.shared.resultsGaussJordan?[indexPath.section - 1] else { return "" }
+        var gaussResult = 0.0
+        var gaussJordanResult = 0.0
+        var resultArr = [String]()
         
-        switch indexPath.row {
-        case 0:
-            return "\(resGauss)"
-        case 1:
-            return "\(resGaussJordan)"
-        case 2:
-            return  String.init(format: "%.3f +e14", abs((resGaussJordan - resGauss) * 100_000_000_000_000))
-        default:
-            return ""
+        if Data.shared.resultsGauss != nil {
+            gaussResult = Data.shared.resultsGauss?[indexPath.section - 1]  ?? 0.0
+            resultArr.append("\(gaussResult)")
         }
+        if Data.shared.resultsGaussJordan != nil {
+            gaussJordanResult = Data.shared.resultsGaussJordan?[indexPath.section - 1] ?? 0.0
+            resultArr.append("\(gaussJordanResult)")
+        }
+        if resultArr.count == 2 { // if compareable
+            resultArr.append(String.init(format: "%.3f +e14", abs((gaussJordanResult - gaussResult) * 100_000_000_000_000)))
+        }
+
+        return resultArr[indexPath.row]
+    }
+    
+    
+    var titlesArr: [String] {
+        var titleArr = [String]()
+        if Data.shared.resultsGauss != nil {
+            titleArr.append("Gauss")
+            }
+        if Data.shared.resultsGaussJordan != nil {
+            titleArr.append("Gauss Jordan")
+            }
+        if titleArr.count == 2 { // if compareable
+            titleArr.append("△")
+        }
+        return titleArr
     }
 }
+
 
 extension ResultsCollectionViewController: UICollectionViewDelegateFlowLayout {
     
