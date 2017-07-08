@@ -79,7 +79,7 @@ public struct Matrix: CustomStringConvertible {
     }
     
     /**
-     *  Recursive aproach
+     *  Recursive approach
      */
     public func determinantRecursive(_ matrix: Matrix) -> Double {
         
@@ -262,8 +262,8 @@ public struct Matrix: CustomStringConvertible {
 public extension Matrix {
     
     /**
-     * Solve system of linear equations using method of Gaussian eleimination
-     *
+     * Solve system of linear equations 
+     * using method of Gaussian elimination
      */
     public mutating func solveWithGaussian() -> [Double] {
         let time = BlockTime()
@@ -286,8 +286,8 @@ public extension Matrix {
     
     
     /**
-     * Solve system of linear equations using method of Gauss-Jordan eleimination
-     *
+     * Solve system of linear equations 
+     * using method of Gauss-Jordan elimination
      */
     public mutating func solveWithGaussianJordan() -> [Double] {
         let time = BlockTime()
