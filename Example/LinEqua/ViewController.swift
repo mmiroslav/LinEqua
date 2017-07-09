@@ -54,7 +54,10 @@ class ViewController: UIViewController {
         }
     }
     
-
+    static let unknwNum = 10
+    static let unknwNumStep = 1
+    var resArra = [(Double, Double)](repeating: (0.0, 0.0), count: unknwNum)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -66,6 +69,48 @@ class ViewController: UIViewController {
         }
         
         print(UIDevice.current.batteryLevel)
+        
+        
+        
+        var matrixArr = [Matrix]()
+        
+        
+        for i in 1...ViewController.unknwNum {
+            generator.setSize(Size(x: i*ViewController.unknwNumStep, y: i*ViewController.unknwNumStep + 1))
+            generator.setZero(volume: Double(slider.value))
+            var tmpMatrix = generator.generateMatrix()
+            tmpMatrix.timeDelegate = self
+            matrixArr.append(tmpMatrix)
+            print("Generating matrix with size \(i)")
+        }
+        print("Generating finished!")
+        
+        
+        for var currentMatrix in matrixArr {
+            
+            _ = currentMatrix.solveWithGaussian()
+            _ = currentMatrix.solveWithGaussianJordan()
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     }
 
     
@@ -116,6 +161,16 @@ class ViewController: UIViewController {
             gaussHeight.constant = CGFloat(baseHeight)
             gausJordanHeight.constant = CGFloat(baseHeight)
         }
+    }
+    
+    
+    
+    func printResults() {
+        print("Gaus")
+        for (index,res) in resArra.enumerated() {
+            print("[\((index+1)*ViewController.unknwNumStep), \(res.0), \(res.1)],")
+        }
+
     }
 }
 
@@ -196,17 +251,25 @@ extension ViewController {
 
 extension ViewController: MatrixTimeMeasureProtocol {
     func timeOfExecutiongGaussian(duration time: CFAbsoluteTime, for matrix: Matrix) {
-        print("Time for Gaussian: \(time)")
-        DispatchQueue.main.sync {
-            gaussTime = time
+        print("Time for Gaussian \(matrix.size.x): \(time)")
+        DispatchQueue.main.async {
+            self.gaussTime = time
+            print("Gaus time: \(time) for dimension: \(matrix.size.x)")
+            self.resArra[matrix.size.x/ViewController.unknwNumStep - 1].0 = time
         }
         
     }
     
     func timeOfExecutiongGaussJordan(duration time: CFAbsoluteTime, for matrix: Matrix) {
-        print("Time for Gauss-Jordan: \(time)")
-        DispatchQueue.main.sync {
-            gaussJordanTime = time
+        print("Time for Gauss-Jordan \(matrix.size.x): \(time)")
+        DispatchQueue.main.async {
+            self.gaussJordanTime = time
+            print("GausJordan time: \(time) for dimension: \(matrix.size.x)")
+            self.resArra[matrix.size.x/ViewController.unknwNumStep-1].1 = time
+            
+            if matrix.size.x == ViewController.unknwNum*ViewController.unknwNumStep {
+                self.printResults()
+            }
         }
     }
     
