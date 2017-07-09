@@ -54,9 +54,13 @@ class ViewController: UIViewController {
         }
     }
     
-    static let unknwNum = 10
+    static let unknwNum = 200
     static let unknwNumStep = 1
     var resArra = [(Double, Double)](repeating: (0.0, 0.0), count: unknwNum)
+    var matrixArr = [Matrix]()
+    var matrixArrResultsGaus = [[Double]](repeating: [Double](repeating: 0.0, count: unknwNum * unknwNumStep), count: unknwNum)
+    var matrixArrResultsGausJordan = [[Double]](repeating: [Double](repeating: 0.0, count: unknwNum * unknwNumStep), count: unknwNum)
+    var matrixArrError = [[Double]](repeating: [Double](repeating: 0.0, count: 2), count: unknwNum)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,7 +76,7 @@ class ViewController: UIViewController {
         
         
         
-        var matrixArr = [Matrix]()
+        
         
         
         for i in 1...ViewController.unknwNum {
@@ -86,10 +90,9 @@ class ViewController: UIViewController {
         print("Generating finished!")
         
         
-        for var currentMatrix in matrixArr {
-            
-            _ = currentMatrix.solveWithGaussian()
-            _ = currentMatrix.solveWithGaussianJordan()
+        for (i, var currentMatrix) in matrixArr.enumerated() {
+            matrixArrResultsGaus[i] = currentMatrix.solveWithGaussian()
+            matrixArrResultsGausJordan[i] = currentMatrix.solveWithGaussianJordan()
         }
         
         
@@ -246,6 +249,35 @@ extension ViewController {
     @IBAction func onTap(_ sender: Any) {
         noOfUnknowns.resignFirstResponder()
     }
+    
+    
+    func finished() {
+        for (i, currentMatrix) in matrixArr.enumerated() {
+            let resultVectorGaus = Vector(withArray: matrixArrResultsGaus[i])
+            let resultVectorGausJordan = Vector(withArray: matrixArrResultsGausJordan[i])
+            
+            var sumMulGaus = 0.0
+            var sumMulGausJordan = 0.0
+            for var row in currentMatrix.elements {
+                let result = row.popLast()
+                let rowVector = Vector(withArray: row)
+                sumMulGaus += result! - (rowVector * resultVectorGaus).sum()
+                sumMulGausJordan += result! - (rowVector * resultVectorGausJordan).sum()
+                
+                print("Difference [\(currentMatrix.size.x)]: \(sumMulGaus), \(sumMulGausJordan) : \(abs(sumMulGaus) - abs(sumMulGausJordan))")
+            }
+            
+            matrixArrError[i] = [
+                abs(sumMulGaus / Double(currentMatrix.elements.count)),
+                abs(sumMulGausJordan / Double(currentMatrix.elements.count)),
+            ]
+            
+        }
+        
+        for i in 0..<matrixArrError.count {
+            print("[\(i + 1), \(matrixArrError[i][0]), \(matrixArrError[i][1])],")
+        }
+    }
 }
 
 
@@ -269,6 +301,7 @@ extension ViewController: MatrixTimeMeasureProtocol {
             
             if matrix.size.x == ViewController.unknwNum*ViewController.unknwNumStep {
                 self.printResults()
+                self.finished()
             }
         }
     }

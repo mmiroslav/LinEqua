@@ -35,6 +35,10 @@ public class Vector: NSObject {
         self.init()
         self.elements = [Double](repeating: 0.0, count: dimension)
     }
+    
+    public func sum() -> Double {
+        return elements.reduce(0, +)
+    }
 }
 
 
@@ -49,6 +53,14 @@ extension Vector {
         var newVectorArray = [Double](repeating: 0.0, count: lhs.count)
         for i in 0..<lhs.count {
             newVectorArray[i] = lhs.elementsArray[i] + rhs.elementsArray[i]
+        }
+        return Vector(withArray: newVectorArray)
+    }
+    
+    static public func *(lhs: Vector, rhs: Vector) -> Vector {
+        var newVectorArray = [Double](repeating: 0.0, count: lhs.count)
+        for i in 0..<lhs.count {
+            newVectorArray[i] = lhs.elementsArray[i] * rhs.elementsArray[i]
         }
         return Vector(withArray: newVectorArray)
     }
