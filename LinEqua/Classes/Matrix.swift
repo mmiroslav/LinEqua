@@ -225,6 +225,9 @@ public struct Matrix: CustomStringConvertible {
     
     mutating func gaussJordan() -> [Double] {
         prepareForElimination()
+        var results = columnAt(index: elements.count)
+        var resultsPivot = 0.0
+        removeCollumn(at: elements.count)
         var matrix = self.elements
         
         var pivotRow: [Double] = [Double]()
@@ -233,27 +236,34 @@ public struct Matrix: CustomStringConvertible {
         for i in 0..<matrix.count {
             pivot = matrix[i][i]
             matrix[i] = matrix[i].map { $0 / pivot }
+            results[i] = results[i] / pivot
             for j in 0..<matrix.count {
                 if j == i { continue }
                 pivotRow = matrix[i]
                 
                 mul = matrix[j][i]
                 pivotRow = pivotRow.map { $0 * mul }
+                resultsPivot = results[i] * mul
                 
                 for k in 0..<matrix[j].count {
                     matrix[j][k] -= pivotRow[k]
                 }
+                results[j] -= resultsPivot
             }
         }
-
-        matrix = Matrix.cleanMatrix(matrix, with: Constant.Gaussian.threshold)
+        return results
+    }
+    
+    
+    func columnAt(index: Int) -> [Double] {
+        var column = [Double](repeating: 0.0, count: elements.count)
+        if elements[0].count < index { return column }
         
-        var sol = [Double](repeating: 0.0, count: matrix.count)
-        for i in 0..<matrix.count {
-            sol[i] = matrix[i].last!
+        for (i, row) in elements.enumerated() {
+            column[i] = row[index]
         }
         
-        return sol
+        return column
     }
 
 }
