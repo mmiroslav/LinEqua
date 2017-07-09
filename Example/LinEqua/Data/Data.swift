@@ -28,4 +28,20 @@ class Data: NSObject {
     private override init() {}
     
     
+    func calculateGausError() -> Double {
+        guard let resultsGauss = resultsGauss else { return 0.0 }
+        let gaussResults = Vector(withArray: resultsGauss)
+        var matrix = generatedMatrix ?? insertedMatrix ?? Matrix.init(withSize: Size(x: resultsGauss.count, y: resultsGauss.count + 1)
+        matrix
+        var ma
+        
+        
+        
+        return 0.0
+    }
+    
+    func calculateGausJordanError() -> Double {
+        return 0.0
+    }
+    
 }
