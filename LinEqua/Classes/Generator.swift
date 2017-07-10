@@ -44,7 +44,7 @@ public class Generator: NSObject {
     
     func randomNumberInRange(from: Int, to: Int) -> Int {
         let zeroMatch = arc4random_uniform(100)
-        if Double(zeroMatch) < self.zeroVolume * 100 {
+        if Double(zeroMatch) < self.zeroVolume * 70 {
             return 0
         }
         

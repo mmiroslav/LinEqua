@@ -23,6 +23,11 @@ class ViewController: UIViewController {
     @IBOutlet weak var gaussHeight: NSLayoutConstraint!
     @IBOutlet weak var gausJordanHeight: NSLayoutConstraint!
     
+    @IBOutlet weak var gausErrorLabel: UILabel!
+    @IBOutlet weak var gausJordanErrorLabel: UILabel!
+    @IBOutlet weak var gaussErrorHeight: NSLayoutConstraint!
+    @IBOutlet weak var gausJordanErrorHight: NSLayoutConstraint!
+    
     @IBOutlet weak var resultsStackView: UIStackView!
     
     let generator = Generator()
@@ -32,6 +37,8 @@ class ViewController: UIViewController {
     var gaussJordanSolution: [Double]?
     var _gaussTime: Double?
     var _gaussJordanTime: Double?
+    var _gaussCompError: Double?
+    var _gaussJordanCompError: Double?
     
     var gaussTime: Double? {
         get {
@@ -51,6 +58,28 @@ class ViewController: UIViewController {
             _gaussJordanTime = newValue
             gaussJordanTimeLabel.text = String(format: "%.4f", _gaussJordanTime ?? 0.0)
             setupTimeBars()
+        }
+    }
+    
+    var gausComputingError: Double? {
+        get {
+            return _gaussCompError
+        }
+        set {
+            _gaussCompError = newValue
+            gausErrorLabel.text = String(format: "%.4f", (_gaussCompError ?? 00) * 10_000_000_000)
+            setupErrorBars()
+        }
+    }
+    
+    var gausJordanComputingError: Double? {
+        get {
+            return _gaussJordanCompError
+        }
+        set {
+            _gaussJordanCompError = newValue
+            gausJordanErrorLabel.text = String(format: "%.4f", (_gaussJordanCompError ?? 00) * 10_000_000_000)
+            setupErrorBars()
         }
     }
     
@@ -87,6 +116,11 @@ class ViewController: UIViewController {
         gaussJordanTime = 0.0
     }
     
+    func setErrorToZero() {
+        gausComputingError = 0.0
+        gausJordanComputingError = 0.0
+    }
+    
     func generateMatrix() -> Bool {
         guard let unknownsCountText = noOfUnknowns.text else { return false }
         guard let unknownsCount = Int(unknownsCountText) else { return false }
@@ -117,6 +151,22 @@ class ViewController: UIViewController {
             gausJordanHeight.constant = CGFloat(baseHeight)
         }
     }
+    
+    func setupErrorBars() {
+        let baseHeight = 16.0
+        let gaussE = gausComputingError ?? 0.0
+        let gaussJordanE = gausJordanComputingError ?? 0.0
+        
+        let maxError = max(gaussE, gaussJordanE)
+        if maxError != 0 {
+            gaussErrorHeight.constant = CGFloat(gaussE / maxError * 100.0 + baseHeight)
+            gausJordanErrorHight.constant = CGFloat(gaussJordanE / maxError * 100.0 + baseHeight)
+        } else {
+            gaussErrorHeight.constant = CGFloat(baseHeight)
+            gausJordanErrorHight.constant = CGFloat(baseHeight)
+        }
+
+    }
 }
 
 extension ViewController {
@@ -127,6 +177,7 @@ extension ViewController {
 
     @IBAction func calculateGaussian() {
         setTimeToZero()
+        setErrorToZero()
         MBProgressHUD.showAdded(to: resultsStackView, animated: true)
         DispatchQueue.global(qos: .userInteractive).async {
             if Data.shared.matrix != nil {
@@ -135,6 +186,7 @@ extension ViewController {
                 Data.shared.resultsGaussJordan = nil
             }
             DispatchQueue.main.async {
+                self.gausComputingError = Data.shared.calculateGausError()
                 MBProgressHUD.hide(for: self.resultsStackView, animated: true)
             }
         }
@@ -143,6 +195,7 @@ extension ViewController {
 
     @IBAction func calculateGaussJordan() {
         setTimeToZero()
+        setErrorToZero()
         MBProgressHUD.showAdded(to: resultsStackView, animated: true)
         DispatchQueue.global(qos: .userInteractive).async {
             if Data.shared.matrix != nil {
@@ -151,6 +204,7 @@ extension ViewController {
                 Data.shared.resultsGauss = nil
             }
             DispatchQueue.main.async {
+                self.gausJordanComputingError = Data.shared.calculateGausJordanError()
                 MBProgressHUD.hide(for: self.resultsStackView, animated: true)
             }
             
@@ -159,6 +213,7 @@ extension ViewController {
 
     @IBAction func calculateBoth() {
         setTimeToZero()
+        setErrorToZero()
         MBProgressHUD.showAdded(to: resultsStackView, animated: true)
         DispatchQueue.global(qos: .userInteractive).async {
             if Data.shared.matrix != nil {
@@ -168,6 +223,8 @@ extension ViewController {
                 Data.shared.resultsGaussJordan = self.gaussJordanSolution
             }
             DispatchQueue.main.async {
+                self.gausComputingError = Data.shared.calculateGausError()
+                self.gausJordanComputingError = Data.shared.calculateGausJordanError()
                 MBProgressHUD.hide(for: self.resultsStackView, animated: true)
             }
         }

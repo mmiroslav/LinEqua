@@ -113,7 +113,7 @@ public struct Matrix: CustomStringConvertible {
     }
     
     
-    mutating func removeRow(at index: Int) {
+    public mutating func removeRow(at index: Int) {
         if index >= elements.count {
             fatalError("Unexpected index")
         }
@@ -121,7 +121,7 @@ public struct Matrix: CustomStringConvertible {
         size = Size(x: size.x - 1, y: size.y)
     }
     
-    mutating func removeCollumn(at index: Int) {
+    public mutating func removeCollumn(at index: Int) {
         if let count = elements.first?.count, index >= count {
             fatalError("Unexpected index")
         }

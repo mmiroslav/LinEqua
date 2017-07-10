@@ -30,18 +30,38 @@ class Data: NSObject {
     
     func calculateGausError() -> Double {
         guard let resultsGauss = resultsGauss else { return 0.0 }
-        let gaussResults = Vector(withArray: resultsGauss)
-        var matrix = generatedMatrix ?? insertedMatrix ?? Matrix.init(withSize: Size(x: resultsGauss.count, y: resultsGauss.count + 1)
-        matrix
-        var ma
+        let gaussResultsVector = Vector(withArray: resultsGauss)
+        guard let matrix = generatedMatrix else {return 0.0}
         
         
-        
-        return 0.0
+        var sumGausErrors = 0.0
+        for row in matrix.elements {
+            let rowVector = Vector(withArray: row)
+            let result = rowVector.popLast()
+            sumGausErrors += result! - (rowVector * gaussResultsVector).sum()
+            
+        }
+        let rv = sumGausErrors / Double(gaussResultsVector.count)
+        print("Gauss error: \(rv)")
+        return abs(rv)
     }
     
     func calculateGausJordanError() -> Double {
-        return 0.0
+        guard let resultsGauss = resultsGaussJordan else { return 0.0 }
+        let gaussJordanResultsVector = Vector(withArray: resultsGauss)
+        guard let matrix = generatedMatrix else {return 0.0}
+        
+        
+        var sumGausJordanErrors = 0.0
+        for row in matrix.elements {
+            let rowVector = Vector(withArray: row)
+            let result = rowVector.popLast()
+            sumGausJordanErrors += result! - (rowVector * gaussJordanResultsVector).sum()
+            
+        }
+        let rv = sumGausJordanErrors / Double(gaussJordanResultsVector.count)
+        print("Gauss Jordan error: \(rv)")
+        return abs(rv)
     }
     
 }

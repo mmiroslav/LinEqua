@@ -35,6 +35,14 @@ public class Vector: NSObject {
         self.init()
         self.elements = [Double](repeating: 0.0, count: dimension)
     }
+    
+    public func popLast() -> Double? {
+        return elements.popLast()
+    }
+    
+    public func sum() -> Double {
+        return elements.reduce(0.0, +)
+    }
 }
 
 
